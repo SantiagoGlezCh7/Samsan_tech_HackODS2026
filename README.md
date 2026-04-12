@@ -1,6 +1,6 @@
 # Impacto Derrame de Petróleo en la Costa de Veracruz y Tabasco 
 
- ![Imagen del derrame](/image/derrame_petroleo.png)
+![Imagen del derrame](/image/derrame_petroleo.jng)
 
 
 # Objetivo: 
