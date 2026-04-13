@@ -1,0 +1,8 @@
+estado,region,radiacion_promedio_kWh_m2_dia,radiacion_pico_verano_kWh_m2_dia,horas_sol_pico_año,generacion_1MWp_MWh_año,factor_planta_pct,capacidad_instalada_2024_MW,potencial_tecnico_MW,potencial_aprovechado_pct,fuente
+Veracruz,Costa del Golfo Norte,4.8,5.0,1752,1314,15.0,120,5000,2.4,SENER / Global Solar Atlas
+Tamaulipas,Costa del Golfo Norte,5.1,5.4,1861,1396,15.9,98,6000,1.6,SENER / Global Solar Atlas
+Tabasco,Costa del Golfo Sur,4.5,4.8,1642,1232,14.1,22,3000,0.7,SENER / Global Solar Atlas
+Campeche,Golfo / Sureste,5.0,5.3,1825,1369,15.6,8,2000,0.4,SENER / AZEL
+Sonora,Referencia nacional,6.2,6.5,2263,1697,19.4,2800,25000,11.2,SENER
+Chihuahua,Referencia nacional,5.9,6.2,2153,1614,18.4,1200,18000,6.7,SENER
+Alemania,Referencia global,3.0,3.5,1095,820,9.4,81000,,,Fraunhofer ISE 2024

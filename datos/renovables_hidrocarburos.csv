@@ -1,0 +1,10 @@
+indicador,unidad,solar_golfo,eolico_golfo,total_renovable,hidrocarburos_golfo,ventaja_renovable,fuente
+Potencial generacion,GWh/año,45000,87600,132600,120000 (actual),+10.5% sobre demanda actual,SENER / NREL 2022
+Empleos directos potencial,empleos,57800,57800,115600,18000,6.4x mas empleos,IRENA / Asolmex / SENER
+Emisiones CO2,gCO2/kWh,0,0,0,490,490 g menos por kWh,IPCC / IEA 2023
+Costo LCOE,USD/MWh,28,32,30 (prom),75,60% mas barato,GlobalData / IRENA 2025
+Vida util instalacion,años,25,25,25,20,5 años mas,IRENA
+Derrama economica local,% inversion,65,60,62 (prom),20,3x mayor,SENER / estimacion
+Riesgo derrame/accidente,escala 1-10,0,0,0,9,Sin riesgo ambiental,Contexto Veracruz 2026
+Capacidad instalada actual Golfo,MW,230,395,625,5200,Brecha enorme por cerrar,SENER / CFE 2024
+Tiempo construccion planta,meses,12,18,15 (prom),48,2 a 4x mas rapido,GlobalData / SENER

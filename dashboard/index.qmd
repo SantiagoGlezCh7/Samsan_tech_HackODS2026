@@ -11,16 +11,27 @@ theme:
 
 
 
---- 
+---
 
 ::: {.tabset}
 
-### Gráficas y Mapas (notebook)
+### Impacto Socioeconómico del Derrame
 
-Se muestran las salidas del notebook `notebooks/desempleo002.ipynb` incrustadas tal cual.
+Se muestran las salidas del notebook `notebooks/desempleo002.ipynb`:
+desempleo por municipio, brecha de género y mapa interactivo de zonas afectadas.
 
 ```{=html}
 <iframe src="assets/desempleo002_outputs.html" style="width:100%;height:900px;border:0;">Tu navegador no soporta iframes.</iframe>
+```
+
+### Infraestructura y Dependencia de Hidrocarburos
+
+Se muestran las salidas del notebook `notebooks/infraestructura_001.ipynb`:
+concentración de establecimientos en el Golfo, participación histórica en la
+matriz energética nacional y potencial de energías renovables como alternativa de mediano plazo.
+
+```{=html}
+<iframe src="assets/infraestructura_001_outputs.html" style="width:100%;height:1100px;border:0;">Tu navegador no soporta iframes.</iframe>
 ```
 
 :::
@@ -29,5 +40,5 @@ Se muestran las salidas del notebook `notebooks/desempleo002.ipynb` incrustadas 
 
 > Notas:
 
-- Si alguna gráfica o mapa no carga, verifica que `dashboard/assets/desempleo002_outputs.html` exista y las rutas a `datos/` sean accesibles.
+- Si alguna gráfica no carga, verifica que los archivos en `dashboard/assets/` existan y las rutas a `datos/` sean accesibles.
 
