@@ -1,0 +1,35 @@
+name: Build and deploy Quarto site to gh-pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Quarto CLI
+      uses: quarto-dev/quarto-actions/setup-quarto@v2
+      with:
+        quarto-version: latest
+
+    - name: Make build script executable and run build
+      run: |
+        chmod +x ./scripts/build_site.sh || true
+        ./scripts/build_site.sh
+
+    - name: Deploy to gh-pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs
+        publish_branch: gh-pages
+        user_name: github-actions[bot]
+        user_email: 41898282+github-actions[bot]@users.noreply.github.com
