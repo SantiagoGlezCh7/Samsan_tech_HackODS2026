@@ -1,9 +1,17 @@
----
-title: "Tablero — Visualizaciones del notebook"
-format: html
-execute:
-  echo: false
----
+--- 
+title: "Derrame de Petroleo en el Golfo de Mexico"
+author: SamsanTech_HackODS
+format: 
+ dashboard:
+     embed-resources: true
+logo: image/logo.png
+theme:
+  light: flatly
+  dark: darkly
+
+
+
+--- 
 
 ::: {.tabset}
 
