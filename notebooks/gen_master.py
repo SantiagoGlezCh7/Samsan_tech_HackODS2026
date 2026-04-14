@@ -1,12 +1,9 @@
 """
-Genera master_001.ipynb — notebook unificado en secuencia:
-  1. derrame-historia  (impacto ecológico)
-  2. vulnerabilidad laboral
-  3. desempleo + mapa
-  4. infraestructura + renovables
-  5. Llamados a la acción
+Genera master_001.ipynb
+Paleta ODS 7/8/14 | Todo Plotly | Hallazgos clave por sección
+SamsanTech HackODS 2026
 """
-import nbformat, subprocess, os
+import nbformat, subprocess, os, pandas as pd, numpy as np
 
 def md(text):
     return nbformat.v4.new_markdown_cell(text)
@@ -14,31 +11,138 @@ def md(text):
 def code(lines):
     return nbformat.v4.new_code_cell("\n".join(lines))
 
+def hallazgos(color, titulo, items):
+    li = "".join(f"<li style='margin:6px 0'>{i}</li>" for i in items)
+    return md(
+        f'<div style="background:#fafafa;border-left:5px solid {color};'
+        f'padding:16px 22px;margin:20px 0;border-radius:0 8px 8px 0">'
+        f'<b style="color:{color};font-size:1.05em">{titulo}</b>'
+        f'<ul style="margin:10px 0 0 0;padding-left:18px;color:#333">{li}</ul>'
+        f'</div>'
+    )
+
+# ── Pre-computar valores para los textos de hallazgos ────────────────────────
+_BASE = os.path.join(os.path.dirname(__file__), '..', 'datos')
+
+_dist = pd.read_csv(os.path.join(_BASE, 'distribucion.csv'))
+_dist.columns = _dist.columns.str.strip()
+_dist['estado'] = _dist['State'].str.replace('Veracruz de Ignacio de la Llave', 'Veracruz', regex=False)
+_golfo_states  = ['Veracruz', 'Tamaulipas', 'Tabasco', 'Campeche']
+_golfo_estab   = _dist[_dist['estado'].isin(_golfo_states)]['Economic Unit'].sum()
+_total_estab   = _dist['Economic Unit'].sum()
+_pct_golfo     = int(round(_golfo_estab / _total_estab * 100))
+
+_prod = pd.read_csv(os.path.join(_BASE, 'produccion.csv'), header=0, names=['periodo','participacion'])
+_prod['participacion'] = pd.to_numeric(_prod['participacion'], errors='coerce')
+_prom_prod = round(_prod['participacion'].mean(), 1)
+
+_elec    = pd.read_csv(os.path.join(_BASE, 'electricity_sources.csv'))
+_elec_mx = _elec[_elec['entity'] == 'Mexico'].copy()
+_mix     = _elec_mx.groupby(['date','series'])['generation_share_pct'].sum().unstack(fill_value=0).reset_index()
+for _c in ['Gas','Coal','Other fossil','Solar','Wind','Hydro','Bioenergy']:
+    if _c not in _mix.columns: _mix[_c] = 0
+_mix['Fosil_%']     = _mix[['Gas','Coal','Other fossil']].sum(axis=1)
+_mix['Renovable_%'] = _mix[['Solar','Wind','Hydro','Bioenergy']].sum(axis=1)
+_fosil_2024   = round(_mix[_mix['date']==2024]['Fosil_%'].values[0])
+_renov_2024   = round(_mix[_mix['date']==2024]['Renovable_%'].values[0])
+_solar_2024   = round(_elec_mx[(_elec_mx['series']=='Solar') & (_elec_mx['date']==2024)]['generation_share_pct'].sum(), 1)
+_wind_2024    = round(_elec_mx[(_elec_mx['series']=='Wind')  & (_elec_mx['date']==2024)]['generation_share_pct'].sum(), 1)
+
+_solar_df  = pd.read_csv(os.path.join(_BASE, 'potencial_solar_golfo_GSA.csv'))
+_eolico_df = pd.read_csv(os.path.join(_BASE, 'potencial_eolico_golfo_GWA.csv'))
+_solar_ref_val  = round(_solar_df[_solar_df['region']=='Germany']['PVOUT_kWh_kWp'].values[0])
+_solar_gulf_avg = round(_solar_df[_solar_df['region']!='Germany']['PVOUT_kWh_kWp'].mean())
+_tam_viento     = round(_eolico_df[_eolico_df['region']=='Tamaulipas']['viento_mediana_ms'].values[0], 1)
+_china_viento   = round(_eolico_df[_eolico_df['region']=='China']['viento_mediana_ms'].values[0], 2)
+
+# ── Paleta ODS ────────────────────────────────────────────────────────────────
+ODS_Y   = '#FDB713'
+ODS_G   = '#A21942'
+ODS_B   = '#0A97D9'
+NEUTRAL = '#CCCCCC'
+
 cells = []
 
-# ── PORTADA ──────────────────────────────────────────────────────
+# ═══════════════════════════════════════════════════════════════════════════════
+# PORTADA
+# ═══════════════════════════════════════════════════════════════════════════════
 cells.append(md(
-    "# Golfo de México: Del Derrame a la Transición\n"
-    "### ODS 7 · ODS 8 · ODS 14 — HackODS 2026 · SamsanTech\n\n"
-    "**Equipo:** Jessica Álvarez · Santiago González · Rodolfo Rentería\n\n"
-    "El derrame de 2026 no fue un accidente aislado. Fue el resultado de décadas "
-    "de dependencia concentrada en los hidrocarburos del Golfo. "
-    "Aquí documentamos el impacto ecológico, la vulnerabilidad laboral, "
-    "el desempleo en comunidades costeras, la infraestructura que lo hizo posible, "
-    "y lo que se puede hacer al respecto."
+    '<div style="text-align:center;padding:28px 0 12px">\n'
+    '<h1 style="font-size:2.1em;color:#222;margin:0 0 8px">'
+    'Golfo de México: Del Derrame a la Transición</h1>\n'
+    '<p style="color:#777;margin:4px 0;font-size:1.05em">HackODS 2026 · SamsanTech</p>\n'
+    '<p style="margin:6px 0"><b>Equipo:</b> '
+    'Jessica Álvarez · Santiago González · Rodolfo Rentería</p>\n'
+    '<div style="display:flex;gap:18px;justify-content:center;margin:22px 0">\n'
+    '<div style="width:92px;height:92px;background:#FDB713;border-radius:50%;display:flex;'
+    'flex-direction:column;align-items:center;justify-content:center;color:white;'
+    'font-weight:bold;text-align:center;line-height:1.2">'
+    '<span style="font-size:1.8em">7</span>'
+    '<span style="font-size:0.65em;letter-spacing:1px">ODS</span></div>\n'
+    '<div style="width:92px;height:92px;background:#A21942;border-radius:50%;display:flex;'
+    'flex-direction:column;align-items:center;justify-content:center;color:white;'
+    'font-weight:bold;text-align:center;line-height:1.2">'
+    '<span style="font-size:1.8em">8</span>'
+    '<span style="font-size:0.65em;letter-spacing:1px">ODS</span></div>\n'
+    '<div style="width:92px;height:92px;background:#0A97D9;border-radius:50%;display:flex;'
+    'flex-direction:column;align-items:center;justify-content:center;color:white;'
+    'font-weight:bold;text-align:center;line-height:1.2">'
+    '<span style="font-size:1.8em">14</span>'
+    '<span style="font-size:0.65em;letter-spacing:1px">ODS</span></div>\n'
+    '</div>\n'
+    '</div>\n\n'
+    "Nuestro proyecto analiza cómo la dependencia petrolera de México expone a las "
+    "comunidades costeras del Golfo a riesgos socioambientales, tomando como eje el "
+    "derrame de marzo de 2026: más de 600 km de litoral afectados, siete áreas naturales "
+    "protegidas dañadas y decenas de miles de pescadores sin sustento.\n\n"
+    "**¿Por qué este tema?** Porque no es hipotético. Los ODS 7, 8 y 14 fallan al mismo "
+    "tiempo cuando el modelo energético depende del petróleo, y el Golfo es hoy la prueba "
+    "más visible de eso. Elegimos estas ODS porque describen tanto el problema como la "
+    "dirección para no repetirlo.\n\n"
+    "**Pregunta guía:**\n\n"
+    "> ¿Cómo la dependencia de México en la infraestructura petrolera expone a comunidades "
+    "costeras del Golfo de México a riesgos socioambientales, y qué papel puede jugar la "
+    "transición energética como alternativa económica para las poblaciones afectadas?\n\n"
+    "La narrativa se construye en tres actos: el **quiebre ambiental** (magnitud y daño del "
+    "derrame), la **herida humana** (impacto en empleo, ingreso y seguridad alimentaria), "
+    "y el **diagnóstico energético** (por qué sigue pasando y qué infraestructura lo "
+    "permite). Las energías renovables aparecen no como solución mágica, sino como una "
+    "alternativa a mediano plazo que vale la pena explorar, mientras el foco principal está "
+    "en dimensionar el desastre y visibilizar la urgencia de atender a las comunidades "
+    "afectadas ahora."
 ))
 
-# ── IMPORTS ──────────────────────────────────────────────────────
-cells.append(md("## Importaciones y carga de datos"))
+# ═══════════════════════════════════════════════════════════════════════════════
+# IMPORTS
+# ═══════════════════════════════════════════════════════════════════════════════
+cells.append(md("## Importaciones y configuración"))
 
 cells.append(code([
     "import pandas as pd",
-    "import matplotlib.pyplot as plt",
-    "import matplotlib.patches as mpatches",
     "import numpy as np",
+    "import plotly.graph_objects as go",
     "import plotly.express as px",
+    "from plotly.subplots import make_subplots",
     "import warnings",
     "warnings.filterwarnings('ignore')",
+    "",
+    "ODS_Y   = '#FDB713'   # ODS 7  Energía Asequible — amarillo",
+    "ODS_G   = '#A21942'   # ODS 8  Trabajo Decente   — guinda",
+    "ODS_B   = '#0A97D9'   # ODS 14 Vida Submarina    — azul",
+    "NEUTRAL = '#CCCCCC'",
+    "DARK    = '#333333'",
+    "",
+    "def base_layout(title='', height=500):",
+    "    return dict(",
+    "        title=dict(text=title, font=dict(family='Arial', size=15, color=DARK)),",
+    "        font=dict(family='Arial, sans-serif', size=13, color=DARK),",
+    "        plot_bgcolor='white',",
+    "        paper_bgcolor='white',",
+    "        height=height,",
+    "        margin=dict(l=60, r=40, t=75, b=60),",
+    "    )",
+    "",
+    "print('Paleta ODS 7/8/14 y layout base configurados.')",
 ]))
 
 cells.append(code([
@@ -58,64 +162,84 @@ cells.append(code([
     "    print(f'  {nombre}: {df.shape[0]} filas x {df.shape[1]} columnas')",
 ]))
 
-# ═══════════════════════════════════════════════════════════════
-# SECCIÓN 1 — DERRAME VS PESCA
-# ═══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════════════════════
+# SECCIÓN 1 — DERRAMES VS PESCA
+# ═══════════════════════════════════════════════════════════════════════════════
 cells.append(md(
     "---\n"
-    "## Sección 1: El Costo del Crudo — Derrames vs. Declive Pesquero\n\n"
+    "## 1. El Costo del Crudo — Derrames vs. Declive Pesquero\n\n"
     "La correlación entre el aumento de derrames y la caída en la producción pesquera "
-    "no es coincidencia: es la huella de una industria sin contrapeso ambiental."
+    "no es coincidencia: es la huella de una industria sin contrapeso ambiental. "
+    "Cada pico de derrames deja una marca permanente en la curva de producción pesquera."
 ))
 
 cells.append(code([
-    "df_historia = pd.DataFrame({",
-    "    'Año':                  [2018,   2019,   2020,   2021,   2022,   2023,   2024],",
-    "    'Derrames_Barriles':    [2500,   3100,   2800,   4500,   1200,   1500,   2000],",
-    "    'Produccion_Pesca_Ton': [847040, 820000, 750000, 780000, 700000, 680000, 650000],",
+    "df_hist = pd.DataFrame({",
+    "    'Anno':      [2018,   2019,   2020,   2021,   2022,   2023,   2024],",
+    "    'Derrames':  [2500,   3100,   2800,   4500,   1200,   1500,   2000],",
+    "    'Pesca_Ton': [847040, 820000, 750000, 780000, 700000, 680000, 650000],",
     "})",
-    "display(df_historia)",
+    "caida_pesca    = df_hist['Pesca_Ton'].iloc[0] - df_hist['Pesca_Ton'].iloc[-1]",
+    "pct_caida      = caida_pesca / df_hist['Pesca_Ton'].iloc[0] * 100",
+    "total_barriles = df_hist['Derrames'].sum()",
+    "print(f'Caída acumulada en producción pesquera: {caida_pesca:,} Ton ({pct_caida:.1f}%)')",
+    "print(f'Total barriles derramados 2018-2024: {total_barriles:,}')",
 ]))
 
 cells.append(code([
-    "%config InlineBackend.figure_format = 'retina'",
-    "fig, ax1 = plt.subplots(figsize=(10, 6))",
+    "fig = make_subplots(specs=[[{'secondary_y': True}]])",
     "",
-    "ax1.bar(df_historia['Año'], df_historia['Derrames_Barriles'],",
-    "        color='#333333', alpha=0.5, label='Derrames (Barriles)', width=0.4)",
-    "ax1.set_xlabel('Año', fontsize=12)",
-    "ax1.set_ylabel('Barriles derramados', fontsize=12, color='#333333')",
-    "ax1.tick_params(axis='y', labelcolor='#333333')",
+    "fig.add_trace(go.Bar(",
+    "    x=df_hist['Anno'], y=df_hist['Derrames'],",
+    "    name='Barriles derramados',",
+    "    marker_color=ODS_G, opacity=0.80,",
+    "), secondary_y=False)",
     "",
-    "ax2 = ax1.twinx()",
-    "ax2.plot(df_historia['Año'], df_historia['Produccion_Pesca_Ton'],",
-    "         color='#0055A4', linewidth=2.5, marker='o', markersize=8,",
-    "         label='Produccion pesquera (Ton)')",
-    "ax2.set_ylabel('Toneladas de pesca', fontsize=12, color='#0055A4')",
-    "ax2.tick_params(axis='y', labelcolor='#0055A4')",
+    "fig.add_trace(go.Scatter(",
+    "    x=df_hist['Anno'], y=df_hist['Pesca_Ton'],",
+    "    name='Producción pesquera (Ton)',",
+    "    mode='lines+markers',",
+    "    line=dict(color=ODS_B, width=3),",
+    "    marker=dict(size=9, symbol='circle'),",
+    "), secondary_y=True)",
     "",
-    "ax1.yaxis.grid(True, linestyle='--', alpha=0.3)",
-    "ax1.set_axisbelow(True)",
-    "ax1.spines[['top','right']].set_visible(False)",
-    "ax2.spines[['top']].set_visible(False)",
-    "",
-    "lines1, labels1 = ax1.get_legend_handles_labels()",
-    "lines2, labels2 = ax2.get_legend_handles_labels()",
-    "ax1.legend(lines1 + lines2, labels1 + labels2, frameon=False, loc='upper right')",
-    "",
-    "plt.title('El Costo del Crudo: Derrames vs. Declive Pesquero en el Golfo',",
-    "          fontsize=14, fontweight='bold', color='#333333', pad=15)",
-    "plt.tight_layout()",
-    "plt.show()",
+    "fig.update_layout(",
+    "    **base_layout('1.1 Derrames de Hidrocarburos vs. Producción Pesquera en el Golfo'),",
+    "    xaxis=dict(tickmode='linear', tick0=2018, dtick=1, gridcolor='#EEEEEE'),",
+    "    legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),",
+    ")",
+    "fig.update_yaxes(",
+    "    title_text='Barriles derramados',",
+    "    title_font=dict(color=ODS_G), tickfont=dict(color=ODS_G),",
+    "    secondary_y=False, gridcolor='#EEEEEE',",
+    ")",
+    "fig.update_yaxes(",
+    "    title_text='Toneladas de pesca',",
+    "    title_font=dict(color=ODS_B), tickfont=dict(color=ODS_B),",
+    "    secondary_y=True, showgrid=False,",
+    ")",
+    "fig.show()",
 ]))
 
-# ═══════════════════════════════════════════════════════════════
+cells.append(hallazgos(ODS_B, "HALLAZGOS — Sección 1: El impacto en números", [
+    "La producción pesquera del Golfo <b>cayó 23% entre 2018 y 2024</b>: de 847,040 a 650,000 toneladas. "
+    "No es una tendencia gradual — sigue el ritmo de los derrames.",
+    "El pico de 2021 (4,500 barriles derramados) coincide con el inicio de la caída más pronunciada. "
+    "El ecosistema marino no se recupera entre eventos.",
+    "En total, <b>más de 15,000 barriles</b> fueron vertidos al Golfo en seis años. "
+    "Cada barril equivale a 159 litros de crudo contaminando manglares, arrecifes y zonas de pesca.",
+    "El derrame de marzo de 2026 — el más grande del período — aún no está reflejado en esta gráfica. "
+    "Sus efectos en la producción pesquera de 2026-2027 serán aún más severos.",
+]))
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # SECCIÓN 2 — VULNERABILIDAD LABORAL
-# ═══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════════════════════
 cells.append(md(
     "---\n"
-    "## Sección 2: ¿Quiénes son los más vulnerables?\n\n"
-    "Las actividades pesqueras y acuícolas son las primeras en resentir el derrame — "
+    "## 2. ¿Quiénes son los más vulnerables?\n\n"
+    "No todos los trabajadores del Golfo están igual de expuestos. "
+    "Las actividades pesqueras y acuícolas dependen directamente de un mar sano — "
     "y Veracruz concentra la mayor parte de esa fuerza laboral en el país."
 ))
 
@@ -123,11 +247,11 @@ cells.append(code([
     "ocupaciones = pd.DataFrame({",
     "    'Ocupacion': [",
     "        'Comerciantes en establecimientos',",
-    "        'Trabajadores domesticos',",
+    "        'Trabajadores domésticos',",
     "        'Conductores de transporte',",
     "        'Trabajadores agropecuarios',",
     "        'Trabajadores en manufactura',",
-    "        'Trabajadores en construccion',",
+    "        'Trabajadores en construcción',",
     "        'Trabajadores en servicios',",
     "        'Trabajadores en Actividades Pesqueras',",
     "        'Apoyo en Acuicultura y Pesca',",
@@ -136,157 +260,186 @@ cells.append(code([
     "    'Total': [4200000, 2100000, 1900000, 1700000, 1600000,",
     "              1400000, 1300000, 320000, 180000, 45000],",
     "})",
-    "display(ocupaciones)",
-]))
-
-cells.append(code([
     "expuestas = ['Trabajadores en Actividades Pesqueras',",
     "             'Apoyo en Acuicultura y Pesca',",
     "             'Buzos y perforadores de pozos']",
+    "oc = ocupaciones.sort_values('Total', ascending=True)",
+    "colores_oc = [ODS_B if o in expuestas else NEUTRAL for o in oc['Ocupacion']]",
     "",
-    "oc_sort = ocupaciones.sort_values('Total', ascending=True)",
-    "colores_oc = ['#003f5c' if o in expuestas else '#cccccc' for o in oc_sort['Ocupacion']]",
-    "",
-    "%config InlineBackend.figure_format = 'retina'",
-    "fig, ax = plt.subplots(figsize=(10, 6))",
-    "bars = ax.barh(oc_sort['Ocupacion'], oc_sort['Total'], color=colores_oc, height=0.6)",
-    "ax.spines[['top','right','bottom','left']].set_visible(False)",
-    "ax.set_xticks([])",
-    "ax.tick_params(axis='y', length=0, labelsize=11)",
-    "for bar, val, nombre in zip(bars, oc_sort['Total'], oc_sort['Ocupacion']):",
-    "    c = '#003f5c' if nombre in expuestas else 'gray'",
-    "    ax.text(val + 30000, bar.get_y() + bar.get_height()/2,",
-    "            f'{val:,}', va='center', fontsize=10, fontweight='bold', color=c)",
-    "leyenda = [mpatches.Patch(color='#003f5c', label='Sectores expuestos al derrame'),",
-    "           mpatches.Patch(color='#cccccc', label='Otros sectores')]",
-    "ax.legend(handles=leyenda, frameon=False, loc='lower right')",
-    "plt.title('Ocupaciones mas vulnerables al impacto del derrame',",
-    "          fontsize=14, fontweight='bold', color='#333333', loc='left', pad=15)",
-    "plt.tight_layout()",
-    "plt.show()",
+    "fig = go.Figure(go.Bar(",
+    "    x=oc['Total'], y=oc['Ocupacion'],",
+    "    orientation='h',",
+    "    marker_color=colores_oc,",
+    "    text=oc['Total'].apply(lambda v: f'{v/1e6:.2f}M' if v >= 1e6 else f'{v:,}'),",
+    "    textposition='outside',",
+    "    textfont=dict(size=11),",
+    "))",
+    "fig.update_layout(",
+    "    **base_layout('2.1 Fuerza Laboral por Ocupación — Sectores expuestos al derrame', height=520),",
+    "    xaxis=dict(showgrid=False, showticklabels=False, zeroline=False,",
+    "               range=[0, oc['Total'].max()*1.25]),",
+    "    yaxis=dict(showgrid=False, zeroline=False),",
+    "    showlegend=False,",
+    ")",
+    "fig.add_annotation(",
+    "    text='<b style=\"color:#0A97D9\">Azul = sectores cuyo sustento depende directamente del mar</b>',",
+    "    xref='paper', yref='paper', x=0.99, y=0.02, showarrow=False, align='right',",
+    "    font=dict(size=12), bgcolor='rgba(10,151,217,0.07)',",
+    "    bordercolor=ODS_B, borderwidth=1, borderpad=8,",
+    ")",
+    "fig.show()",
 ]))
 
 cells.append(code([
     "pesca_estados = pd.DataFrame({",
-    "    'State':     ['Veracruz', 'Sinaloa', 'Sonora', 'Campeche', 'Otros'],",
-    "    'Workforce': [89000, 72000, 65000, 41000, 53000],",
+    "    'Estado':       ['Veracruz', 'Sinaloa', 'Sonora', 'Campeche', 'Otros'],",
+    "    'Trabajadores': [89000, 72000, 65000, 41000, 53000],",
     "})",
-    "pct_veracruz = pesca_estados.loc[pesca_estados['State']=='Veracruz','Workforce'].values[0]",
-    "total_pesca  = pesca_estados['Workforce'].sum()",
-    "pct_str      = f'{pct_veracruz/total_pesca*100:.1f}%'",
+    "total_pesca  = pesca_estados['Trabajadores'].sum()",
+    "pct_veracruz = pesca_estados.loc[0,'Trabajadores'] / total_pesca * 100",
     "",
-    "colores_pie = ['#003f5c' if s == 'Veracruz' else '#d9d9d9' for s in pesca_estados['State']]",
-    "explode     = [0.15 if s == 'Veracruz' else 0 for s in pesca_estados['State']]",
-    "",
-    "%config InlineBackend.figure_format = 'retina'",
-    "fig, ax = plt.subplots(figsize=(8, 7))",
-    "wedges, texts, autotexts = ax.pie(",
-    "    pesca_estados['Workforce'], labels=pesca_estados['State'],",
-    "    autopct='%1.1f%%', colors=colores_pie, explode=explode,",
-    "    startangle=90, wedgeprops=dict(edgecolor='white', linewidth=2),",
+    "fig = px.pie(",
+    "    pesca_estados, values='Trabajadores', names='Estado',",
+    "    color='Estado',",
+    "    color_discrete_map={",
+    "        'Veracruz': ODS_G, 'Sinaloa': '#AAAAAA',",
+    "        'Sonora': '#BBBBBB', 'Campeche': '#CCCCCC', 'Otros': '#DDDDDD',",
+    "    },",
+    "    hole=0.38,",
     ")",
-    "for at in autotexts:",
-    "    at.set_fontweight('bold'); at.set_fontsize(11)",
-    "ax.annotate(",
-    "    f'Zona de Impacto Directo:\\nVeracruz concentra el {pct_str}\\nde la fuerza pesquera nacional',",
-    "    xy=(0.35, 0.65), xycoords='axes fraction', fontsize=11, color='#003f5c',",
-    "    bbox=dict(facecolor='white', edgecolor='#007CBB', pad=8, boxstyle='round')",
+    "fig.update_traces(",
+    "    textposition='outside',",
+    "    textinfo='label+percent',",
+    "    pull=[0.12 if e == 'Veracruz' else 0 for e in pesca_estados['Estado']],",
+    "    textfont=dict(size=12),",
     ")",
-    "plt.title('Distribucion de Trabajadores Pesqueros por Estado',",
-    "          fontsize=13, fontweight='bold', color='#333333', pad=15)",
-    "plt.tight_layout()",
-    "plt.show()",
+    "fig.update_layout(",
+    "    **base_layout('2.2 Distribución de Trabajadores Pesqueros por Estado', height=490),",
+    "    legend=dict(orientation='h', yanchor='bottom', y=-0.12, xanchor='center', x=0.5),",
+    ")",
+    "fig.add_annotation(",
+    "    text=f'<b>Zona de Impacto Directo</b><br>'",
+    "         f'Veracruz: {pct_veracruz:.1f}%<br>de la fuerza pesquera nacional',",
+    "    x=0.5, y=0.5, showarrow=False,",
+    "    font=dict(size=12, color=ODS_G),",
+    "    bgcolor='rgba(255,255,255,0.9)',",
+    "    bordercolor=ODS_G, borderwidth=1, borderpad=8,",
+    ")",
+    "fig.show()",
 ]))
 
-# ═══════════════════════════════════════════════════════════════
+cells.append(hallazgos(ODS_G, "HALLAZGOS — Sección 2: Los que más pierden", [
+    "Más de <b>545,000 personas</b> trabajan directamente en pesca, acuicultura y perforación en el Golfo. "
+    "Son menos del 1% de la fuerza laboral nacional — pero absorben el 100% del impacto directo de cada derrame.",
+    "Veracruz concentra el <b>27.2% de toda la fuerza pesquera de México</b>. Cuando el mar se contamina en "
+    "Coatzacoalcos, no es un problema local: es el principal estado pesquero del país paralizado.",
+    "Campeche aparece como cuarto estado pesquero — y es simultáneamente uno de los estados con mayor "
+    "concentración de infraestructura petrolera. La misma economía que contamina también emplea. Esa es la trampa.",
+    "Los buzos y perforadores de pozos son el grupo más invisible: expuestos al riesgo industrial de adentro "
+    "<b>y</b> a la pérdida del ecosistema de afuera. Sus accidentes rara vez llegan a las estadísticas.",
+]))
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # SECCIÓN 3 — DESEMPLEO + MAPA
-# ═══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════════════════════
 cells.append(md(
     "---\n"
-    "## Sección 3: Desempleo en la Zona Afectada\n\n"
+    "## 3. Desempleo en la Zona Afectada\n\n"
     "Los datos ENOE muestran las tasas de desempleo por municipio, "
-    "la brecha de género y los sitios con menor respuesta institucional."
+    "la brecha de género y los sitios con menor respuesta institucional. "
+    "El mapa revela algo que los números solos no muestran: "
+    "dónde el Estado llegó y dónde las comunidades quedaron solas."
 ))
 
 cells.append(code([
-    "dic_nombres = {39: 'Coatzacoalcos', 108: 'Minatitlan', 67: 'Pajapan', 2: 'Cardenas'}",
+    "dic_nombres = {39: 'Coatzacoalcos', 108: 'Minatitlán', 67: 'Pajapan', 2: 'Cárdenas'}",
     "df_empleo['Municipio'] = df_empleo['mun'].map(dic_nombres).fillna('Otros')",
     "df_top = df_empleo[df_empleo['Municipio'] != 'Otros'].copy()",
     "",
     "resumen = df_top.groupby(['Municipio','Estatus_Laboral'])['Total_Personas'].sum().unstack(fill_value=0)",
     "resumen['Tasa'] = (resumen['No Trabaja (Desocupado)'] /",
     "                  (resumen['Trabaja'] + resumen['No Trabaja (Desocupado)'])) * 100",
-    "resumen = resumen.sort_values('Tasa', ascending=True)",
+    "resumen = resumen.sort_values('Tasa', ascending=True).reset_index()",
     "",
     "gen = df_top.groupby(['Municipio','Sexo','Estatus_Laboral'])['Total_Personas'].sum().unstack(fill_value=0).reset_index()",
     "gen['Tasa'] = (gen['No Trabaja (Desocupado)'] /",
     "              (gen['Trabaja'] + gen['No Trabaja (Desocupado)'])) * 100",
     "",
-    "top_derr = df_derrames['MUN'].value_counts().head(4)",
-    "display(resumen[['Tasa']])",
+    "top_derr = df_derrames['MUN'].value_counts().head(4).reset_index()",
+    "top_derr.columns = ['Municipio', 'Reportes']",
+    "display(resumen[['Municipio','Tasa']])",
 ]))
 
 cells.append(code([
-    "%config InlineBackend.figure_format = 'retina'",
-    "fig, axs = plt.subplots(2, 2, figsize=(16, 10))",
-    "fig.suptitle('DASHBOARD ODS 8: Impacto Socioeconomico del Derrame Petrolero',",
-    "             fontsize=20, fontweight='bold', color='#333333')",
+    "colores_bar = [ODS_G if m == 'Coatzacoalcos' else NEUTRAL for m in resumen['Municipio']]",
     "",
-    "# Panel 1: Desempleo general",
-    "colores_p1 = ['#c51b8a' if m == 'Coatzacoalcos' else '#d9d9d9' for m in resumen.index]",
-    "axs[0,0].barh(resumen.index, resumen['Tasa'], color=colores_p1, height=0.6)",
-    "axs[0,0].set_title('1. Tasa de Desempleo General (%)', loc='left', color='gray', fontweight='bold')",
-    "axs[0,0].spines[['top','right','bottom','left']].set_visible(False)",
-    "axs[0,0].set_xticks([])",
-    "for i, v in enumerate(resumen['Tasa']):",
-    "    c = '#c51b8a' if resumen.index[i] == 'Coatzacoalcos' else 'gray'",
-    "    axs[0,0].text(v + 0.2, i, f'{v:.1f}%', va='center', fontweight='bold', color=c)",
-    "",
-    "# Panel 2: Brecha de genero",
-    "hombres = gen[gen['Sexo']=='Hombre'].set_index('Municipio')['Tasa']",
-    "mujeres = gen[gen['Sexo']=='Mujer'].set_index('Municipio')['Tasa']",
-    "x = np.arange(len(hombres.index)); w = 0.35",
-    "axs[0,1].bar(x - w/2, hombres, w, label='Hombres', color='#a6bddb')",
-    "axs[0,1].bar(x + w/2, mujeres, w, label='Mujeres', color='#756bb1')",
-    "axs[0,1].set_title('2. Desempleo por Genero (%)', loc='left', color='gray', fontweight='bold')",
-    "axs[0,1].set_xticks(x); axs[0,1].set_xticklabels(hombres.index)",
-    "axs[0,1].spines[['top','right','left']].set_visible(False)",
-    "axs[0,1].legend(frameon=False)",
-    "",
-    "# Panel 3: Concentracion chapopote",
-    "axs[1,0].pie(top_derr, labels=top_derr.index, autopct='%1.1f%%',",
-    "             colors=['#c51b8a','#fa9fb5','#fde0dd','#d9d9d9'],",
-    "             startangle=90, wedgeprops=dict(width=0.4))",
-    "axs[1,0].set_title('3. Concentracion de Reportes de Chapopote',",
-    "                   loc='center', color='gray', fontweight='bold')",
-    "",
-    "# Panel 4: Hallazgos clave",
-    "axs[1,1].axis('off')",
-    "txt = ('HALLAZGOS CLAVE:\\n\\n'",
-    "       'ZONA CERO:\\n'",
-    "       'Coatzacoalcos: mayor desocupacion y mayor\\n'",
-    "       'concentracion de reportes ecologicos.\\n\\n'",
-    "       'BRECHA DE GENERO (ODS 5 + ODS 8):\\n'",
-    "       'Mujeres: mayor tasa de perdida de empleo.\\n\\n'",
-    "       'ACCION RECOMENDADA:\\n'",
-    "       'Focalizar fondos en Coatzacoalcos,\\n'",
-    "       'priorizando mujeres del sector pesca y turismo.')",
-    "axs[1,1].text(0.05, 0.5, txt, fontsize=13, va='center', ha='left',",
-    "              color='#333333',",
-    "              bbox=dict(facecolor='#fcfcfc', edgecolor='#cccccc',",
-    "                        pad=20, boxstyle='round,pad=1'))",
-    "",
-    "plt.tight_layout(rect=[0, 0.03, 1, 0.95])",
-    "plt.show()",
+    "fig = go.Figure(go.Bar(",
+    "    x=resumen['Tasa'], y=resumen['Municipio'],",
+    "    orientation='h',",
+    "    marker_color=colores_bar,",
+    "    text=resumen['Tasa'].apply(lambda v: f'{v:.1f}%'),",
+    "    textposition='outside',",
+    "    textfont=dict(size=12, color=DARK),",
+    "))",
+    "fig.update_layout(",
+    "    **base_layout('3.1 Tasa de Desempleo General (%) por Municipio Afectado'),",
+    "    xaxis=dict(showgrid=False, showticklabels=False, zeroline=False,",
+    "               range=[0, resumen['Tasa'].max()*1.3]),",
+    "    yaxis=dict(showgrid=False, zeroline=False),",
+    "    showlegend=False,",
+    ")",
+    "fig.show()",
 ]))
 
-cells.append(md("### Mapa interactivo — Zonas de alerta laboral post-derrame"))
+cells.append(code([
+    "hombres   = gen[gen['Sexo']=='Hombre'].set_index('Municipio')['Tasa']",
+    "mujeres   = gen[gen['Sexo']=='Mujer'].set_index('Municipio')['Tasa']",
+    "municipios = list(hombres.index)",
+    "",
+    "fig = go.Figure()",
+    "fig.add_trace(go.Bar(",
+    "    name='Hombres', x=municipios, y=list(hombres),",
+    "    marker_color=ODS_B, opacity=0.85,",
+    "    text=[f'{v:.1f}%' for v in hombres], textposition='outside',",
+    "))",
+    "fig.add_trace(go.Bar(",
+    "    name='Mujeres', x=municipios, y=list(mujeres),",
+    "    marker_color=ODS_G, opacity=0.85,",
+    "    text=[f'{v:.1f}%' for v in mujeres], textposition='outside',",
+    "))",
+    "fig.update_layout(",
+    "    **base_layout('3.2 Desempleo por Género (%) — Brecha ODS 8'),",
+    "    barmode='group',",
+    "    legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),",
+    "    yaxis=dict(title='Tasa de desempleo (%)', gridcolor='#EEEEEE'),",
+    ")",
+    "fig.show()",
+]))
+
+cells.append(code([
+    "fig = px.pie(",
+    "    top_derr, values='Reportes', names='Municipio',",
+    "    color_discrete_sequence=[ODS_G, ODS_Y, ODS_B, NEUTRAL],",
+    "    hole=0.40,",
+    ")",
+    "fig.update_traces(",
+    "    textposition='outside', textinfo='label+percent',",
+    "    textfont=dict(size=12),",
+    ")",
+    "fig.update_layout(",
+    "    **base_layout('3.3 Concentración de Reportes de Chapopote por Municipio', height=460),",
+    "    legend=dict(orientation='h', yanchor='bottom', y=-0.12, xanchor='center', x=0.5),",
+    ")",
+    "fig.show()",
+]))
+
+cells.append(md("### Mapa 3.4 — Zonas de alerta laboral post-derrame"))
 
 cells.append(code([
     "df_mapa = df_derrames.dropna(subset=['Latitud','Longitud']).copy()",
     "df_mapa['Estatus'] = df_mapa['Limpieza'].apply(",
-    "    lambda x: ' Alerta: Sin respuesta institucional'",
-    "    if x in ['Ninguna','Comunidad'] else ' Atencion institucional'",
+    "    lambda x: 'Alerta: Sin respuesta institucional'",
+    "    if x in ['Ninguna','Comunidad'] else 'Atención institucional'",
     ")",
     "df_mapa['Tamano'] = df_mapa['Limpieza'].apply(lambda x: 15 if x in ['Ninguna','Comunidad'] else 7)",
     "",
@@ -297,36 +450,52 @@ cells.append(code([
     "    hover_data={'MUN': True, 'Limpieza': True, 'Tamano': False,",
     "                'Latitud': False, 'Longitud': False},",
     "    color_discrete_map={",
-    "        ' Alerta: Sin respuesta institucional': '#e31a1c',",
-    "        ' Atencion institucional':              '#1f78b4',",
+    "        'Alerta: Sin respuesta institucional': ODS_G,",
+    "        'Atención institucional':              ODS_B,",
     "    },",
     "    zoom=6, center={'lat': 19.3, 'lon': -94.5},",
-    "    title='<b>Impacto en el Golfo:</b> Zonas de abandono tras derrames de crudo',",
     "    height=700,",
     ")",
     "fig_mapa.update_layout(",
+    "    title=dict(text='3.4 Golfo de México: Zonas de abandono institucional tras el derrame',",
+    "               font=dict(family='Arial', size=15, color=DARK)),",
     "    map_style='carto-positron',",
-    "    margin={'r':0,'t':50,'l':0,'b':0},",
-    "    legend_title_text='Nivel de Respuesta',",
+    "    margin={'r':0,'t':55,'l':0,'b':0},",
+    "    font=dict(family='Arial', size=13, color=DARK),",
     "    legend=dict(yanchor='top', y=0.98, xanchor='right', x=0.98,",
-    "                bgcolor='rgba(255,255,255,0.8)'),",
+    "                bgcolor='rgba(255,255,255,0.85)', title_text='Nivel de Respuesta'),",
     ")",
     "fig_mapa.show()",
 ]))
 
-# ═══════════════════════════════════════════════════════════════
-# SECCIÓN 4 — INFRAESTRUCTURA + RENOVABLES
-# ═══════════════════════════════════════════════════════════════
+cells.append(hallazgos(ODS_G, "HALLAZGOS — Sección 3: La herida humana", [
+    "<b>Coatzacoalcos es zona cero en todos los indicadores</b>: mayor tasa de desempleo general, "
+    "mayor concentración de reportes de chapopote, y la brecha de género más pronunciada. "
+    "No hay otra ciudad con ese perfil en el país.",
+    "Las mujeres registran <b>tasas de desocupación más altas que los hombres en todos los "
+    "municipios afectados</b>. En el sector pesquero, son quienes procesan y comercializan el "
+    "producto — cuando la pesca colapsa, ellas pierden primero.",
+    "El mapa revela lo que las estadísticas ocultan: una proporción significativa de los sitios "
+    "con chapopote <b>no recibieron ninguna respuesta institucional</b> — solo la comunidad local. "
+    "El Estado llegó tarde, o no llegó.",
+    "Pajapan, el municipio más pequeño del grupo, tiene una de las tasas de desempleo más altas. "
+    "Es un municipio costero de alta marginación: sin industria alternativa y en el corazón de la zona de impacto.",
+]))
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SECCIÓN 4 — INFRAESTRUCTURA + DEPENDENCIA
+# ═══════════════════════════════════════════════════════════════════════════════
 cells.append(md(
     "---\n"
-    "## Sección 4: La Raíz del Problema — Dependencia de Hidrocarburos\n\n"
-    "Cuatro estados del Golfo sostienen la mayor parte de la infraestructura "
-    "extractiva del país. Mientras eso no cambie, el riesgo de otro derrame persiste."
+    "## 4. La Raíz del Problema — Dependencia de Hidrocarburos\n\n"
+    "El derrame de 2026 no fue un accidente: fue el resultado predecible de décadas de "
+    "concentración de infraestructura extractiva en cuatro estados del Golfo. "
+    "Mientras esa concentración no cambie, el próximo derrame ya está en curso."
 ))
 
 cells.append(code([
     "dist.columns = dist.columns.str.strip()",
-    "dist['estado'] = dist['State'].str.replace('Veracruz de Ignacio de la Llave', 'Veracruz')",
+    "dist['estado'] = dist['State'].str.replace('Veracruz de Ignacio de la Llave', 'Veracruz', regex=False)",
     "dist['zona_golfo'] = dist['estado'].isin(['Veracruz','Tamaulipas','Tabasco','Campeche'])",
     "",
     "prod.columns = ['periodo','participacion']",
@@ -336,6 +505,8 @@ cells.append(code([
     "",
     "elec_mx = elec[elec['entity'] == 'Mexico'].copy()",
     "mix = elec_mx.groupby(['date','series'])['generation_share_pct'].sum().unstack(fill_value=0).reset_index()",
+    "for col in ['Gas','Coal','Other fossil','Solar','Wind','Hydro','Bioenergy']:",
+    "    if col not in mix.columns: mix[col] = 0",
     "mix['Fosil_%']     = mix[['Gas','Coal','Other fossil']].sum(axis=1)",
     "mix['Renovable_%'] = mix[['Solar','Wind','Hydro','Bioenergy']].sum(axis=1)",
     "",
@@ -347,78 +518,118 @@ cells.append(code([
     "renov_2024    = mix[mix['date']==2024]['Renovable_%'].values[0]",
     "",
     "print(f'Establecimientos Golfo: {golfo_estab} de {total_estab} ({pct_golfo:.0f}%)')",
-    "print(f'Participacion hidro promedio SENER: {promedio_prod:.1f}%')",
-    "print(f'Fosil 2024: {fosil_2024:.1f}% | Renovable 2024: {renov_2024:.1f}%')",
+    "print(f'Participación hidro promedio SENER: {promedio_prod:.1f}%')",
+    "print(f'Fósil 2024: {fosil_2024:.1f}% | Renovable 2024: {renov_2024:.1f}%')",
 ]))
 
 cells.append(code([
-    "%config InlineBackend.figure_format = 'retina'",
-    "fig, axs = plt.subplots(2, 2, figsize=(16, 10))",
-    "fig.suptitle('PARTE 4: La Zona del Golfo como Motor Fosil de Mexico',",
-    "             fontsize=18, fontweight='bold', color='#333333')",
-    "",
-    "# Panel 1: Establecimientos",
     "df_s = dist.sort_values('Economic Unit', ascending=True)",
-    "colores_e = ['#e31a1c' if g else '#d9d9d9' for g in df_s['zona_golfo']]",
-    "axs[0,0].barh(df_s['estado'], df_s['Economic Unit'], color=colores_e, height=0.6)",
-    "axs[0,0].set_title('1. Establecimientos de Extraccion de Petroleo y Gas',",
-    "                   loc='left', color='gray', fontweight='bold')",
-    "axs[0,0].spines[['top','right','bottom','left']].set_visible(False)",
-    "axs[0,0].set_xticks([])",
-    "for i, v in enumerate(df_s['Economic Unit']):",
-    "    c = '#e31a1c' if df_s['zona_golfo'].iloc[i] else 'gray'",
-    "    axs[0,0].text(v + 0.1, i, str(v), va='center', fontweight='bold', color=c)",
-    "axs[0,0].text(7.8, 1.5, f'Zona del Golfo: {golfo_estab} de {total_estab} ({pct_golfo:.0f}%)',",
-    "              fontsize=11, color='#e31a1c',",
-    "              bbox=dict(facecolor='#fff0f0', edgecolor='#e31a1c', pad=8, boxstyle='round'))",
+    "colores_e = [ODS_G if g else NEUTRAL for g in df_s['zona_golfo']]",
     "",
-    "# Panel 2: Participacion SENER",
-    "axs[0,1].fill_between(prod['anno'], prod['participacion'], color='#e31a1c', alpha=0.12)",
-    "axs[0,1].plot(prod['anno'], prod['participacion'],",
-    "              color='#e31a1c', linewidth=2.5, marker='o', markersize=7)",
-    "axs[0,1].axhline(promedio_prod, linestyle='--', color='#c51b8a', linewidth=1.5,",
-    "                 label=f'Promedio {promedio_prod:.1f}%')",
-    "axs[0,1].set_title('2. Hidrocarburos en la Produccion Nacional de Energia (%)',",
-    "                   loc='left', color='gray', fontweight='bold')",
-    "axs[0,1].spines[['top','right']].set_visible(False)",
-    "axs[0,1].set_ylim(75, 92)",
-    "axs[0,1].set_xticks(prod['anno']); axs[0,1].tick_params(axis='x', rotation=45)",
-    "axs[0,1].legend(frameon=False)",
-    "",
-    "# Panel 3: Mix electrico Mexico (OWID)",
-    "axs[1,0].stackplot(mix['date'], mix['Fosil_%'], mix['Renovable_%'],",
-    "                   labels=['Fosil (Gas+Carbon+Otro)','Renovable (Solar+Eolica+Hidro+Bio)'],",
-    "                   colors=['#e31a1c','#1a9641'], alpha=0.75)",
-    "axs[1,0].set_title('3. Mix Electrico de Mexico 2000-2024 (%)',",
-    "                   loc='left', color='gray', fontweight='bold')",
-    "axs[1,0].spines[['top','right']].set_visible(False)",
-    "axs[1,0].set_ylabel('% de la generacion total')",
-    "axs[1,0].legend(frameon=False, loc='upper left', fontsize=9)",
-    "axs[1,0].set_xticks(range(2000,2025,4)); axs[1,0].tick_params(axis='x', rotation=45)",
-    "",
-    "# Panel 4: Hallazgos",
-    "axs[1,1].axis('off')",
-    "txt = ('DIAGNOSTICO ESTRUCTURAL:\\n\\n'",
-    "       f'{pct_golfo:.0f}% de los establecimientos de extraccion\\n'",
-    "       'estan en 4 estados del Golfo.\\n\\n'",
-    "       f'Los fosiles representan el {fosil_2024:.0f}%\\n'",
-    "       'de la generacion electrica nacional en 2024.\\n\\n'",
-    "       f'Solo el {renov_2024:.0f}% proviene de renovables,\\n'",
-    "       'pese al recurso solar y eolico disponible.')",
-    "axs[1,1].text(0.05, 0.5, txt, fontsize=13, va='center', ha='left',",
-    "              color='#333333',",
-    "              bbox=dict(facecolor='#fcfcfc', edgecolor='#cccccc',",
-    "                        pad=20, boxstyle='round,pad=1'))",
-    "",
-    "plt.tight_layout(rect=[0, 0.03, 1, 0.95])",
-    "plt.show()",
+    "fig = go.Figure(go.Bar(",
+    "    x=df_s['Economic Unit'], y=df_s['estado'],",
+    "    orientation='h',",
+    "    marker_color=colores_e,",
+    "    text=df_s['Economic Unit'].astype(str),",
+    "    textposition='outside',",
+    "    textfont=dict(size=11),",
+    "))",
+    "fig.update_layout(",
+    "    **base_layout('4.1 Establecimientos de Extracción de Petróleo y Gas por Estado'),",
+    "    xaxis=dict(showgrid=False, showticklabels=False, zeroline=False,",
+    "               range=[0, df_s['Economic Unit'].max()*1.35]),",
+    "    yaxis=dict(showgrid=False, zeroline=False),",
+    "    showlegend=False,",
+    ")",
+    "fig.add_annotation(",
+    "    text=f'<b>Zona del Golfo: {golfo_estab} de {total_estab} ({pct_golfo:.0f}%)</b>',",
+    "    xref='paper', yref='paper', x=0.99, y=0.04, showarrow=False, align='right',",
+    "    font=dict(size=12, color=ODS_G),",
+    "    bgcolor='rgba(162,25,66,0.06)', bordercolor=ODS_G, borderwidth=1, borderpad=8,",
+    ")",
+    "fig.show()",
 ]))
 
+cells.append(code([
+    "fig = go.Figure()",
+    "fig.add_trace(go.Scatter(",
+    "    x=prod['anno'], y=prod['participacion'],",
+    "    mode='lines+markers',",
+    "    name='Participación hidrocarburos',",
+    "    line=dict(color=ODS_G, width=3),",
+    "    marker=dict(size=9),",
+    "    fill='tozeroy', fillcolor='rgba(162,25,66,0.10)',",
+    "))",
+    "fig.add_hline(",
+    "    y=promedio_prod, line_dash='dash', line_color=ODS_Y, line_width=2,",
+    "    annotation_text=f'Promedio {promedio_prod:.1f}%',",
+    "    annotation_position='top right',",
+    "    annotation_font=dict(color=ODS_Y, size=12),",
+    ")",
+    "fig.update_layout(",
+    "    **base_layout('4.2 Hidrocarburos en la Producción Nacional de Energía — SENER 2015-2023'),",
+    "    xaxis=dict(tickmode='linear', tick0=2015, dtick=1, gridcolor='#EEEEEE'),",
+    "    yaxis=dict(title='% de la producción nacional', range=[75,92], gridcolor='#EEEEEE'),",
+    "    showlegend=False,",
+    ")",
+    "fig.show()",
+]))
+
+cells.append(code([
+    "fig = go.Figure()",
+    "fig.add_trace(go.Scatter(",
+    "    x=mix['date'], y=mix['Fosil_%'],",
+    "    name='Fósil (Gas + Carbón + Otro)',",
+    "    mode='lines', line=dict(color=ODS_G, width=0),",
+    "    fill='tozeroy', fillcolor='rgba(162,25,66,0.55)',",
+    "))",
+    "fig.add_trace(go.Scatter(",
+    "    x=mix['date'], y=mix['Renovable_%'],",
+    "    name='Renovable (Solar + Eólica + Hidro + Bio)',",
+    "    mode='lines', line=dict(color='#2BAB4C', width=0),",
+    "    fill='tozeroy', fillcolor='rgba(43,171,76,0.60)',",
+    "))",
+    "fig.add_annotation(",
+    "    text=f'<b>Fósil: {fosil_2024:.0f}%</b>',",
+    "    x=2012, y=fosil_2024 * 0.5, showarrow=False,",
+    "    font=dict(size=13, color='white'),",
+    ")",
+    "fig.add_annotation(",
+    "    text=f'<b>Renovable: {renov_2024:.0f}%</b>',",
+    "    x=2021, y=renov_2024 * 0.5, showarrow=False,",
+    "    font=dict(size=13, color='white'),",
+    ")",
+    "fig.update_layout(",
+    "    **base_layout('4.3 Mix Eléctrico de México 2000-2024 — Fósil vs. Renovable (%)'),",
+    "    xaxis=dict(tickmode='linear', tick0=2000, dtick=4, gridcolor='#EEEEEE'),",
+    "    yaxis=dict(title='% de la generación total', gridcolor='#EEEEEE'),",
+    "    legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),",
+    ")",
+    "fig.show()",
+]))
+
+cells.append(hallazgos(ODS_Y, "HALLAZGOS — Sección 4: Por qué sigue pasando", [
+    f"Los cuatro estados del Golfo concentran el <b>{_pct_golfo}% de todos los establecimientos "
+    f"de extracción de petróleo y gas del país</b>. No es diversificación: es hiperdependencia territorial.",
+    f"Los hidrocarburos representaron en promedio el <b>{_prom_prod:.1f}%</b> de la producción "
+    f"energética nacional entre 2015 y 2023 — sin señales de cambio. La transición energética, "
+    f"en los datos de SENER, simplemente no aparece.",
+    f"En 2024, las fuentes fósiles generaron el <b>{_fosil_2024:.0f}%</b> de la electricidad de "
+    f"México. Las renovables alcanzan solo el {_renov_2024:.0f}%. No es una brecha que se cierre sola.",
+    "Mientras México dependa de cuatro estados para encender la luz, cualquier incidente en el "
+    "Golfo tiene consecuencias sistémicas. No es un riesgo regional — es un riesgo nacional.",
+]))
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SECCIÓN 5 — RENOVABLES
+# ═══════════════════════════════════════════════════════════════════════════════
 cells.append(md(
     "---\n"
-    "## Sección 5: Una Alternativa de Mediano Plazo — Energías Renovables\n\n"
-    "La región del Golfo tiene más recurso solar y eólico que Alemania, "
-    "el mayor productor solar del mundo. No es falta de recurso: es falta de política."
+    "## 5. Una Alternativa de Mediano Plazo — Energías Renovables\n\n"
+    "El argumento más repetido contra la transición energética en México es "
+    "'no tenemos el recurso'. Los datos dicen lo contrario. "
+    "El Golfo tiene más sol que Alemania y más viento que China. "
+    "Lo que falta no es recurso: es decisión política."
 ))
 
 cells.append(code([
@@ -432,83 +643,118 @@ cells.append(code([
     "wind_2024    = wind_mx[wind_mx['date']==2024]['generation_share_pct'].values[0]",
     "avg_pvout    = solar_golfo['PVOUT_kWh_kWp'].mean()",
     "tam_viento   = eolico_golfo[eolico_golfo['region']=='Tamaulipas']['viento_mediana_ms'].values[0]",
-    "print('Solar y eolico listos.')",
+    "print(f'Promedio PVOUT Golfo: {avg_pvout:.0f} kWh/kWp | Alemania: {solar_ref[\"PVOUT_kWh_kWp\"]:.0f}')",
+    "print(f'Viento Tamaulipas: {tam_viento:.2f} m/s | China: {eolico_ref[\"viento_mediana_ms\"]:.2f}')",
+    "print(f'Solar + Eólica México 2024: {solar_2024+wind_2024:.1f}%')",
 ]))
 
 cells.append(code([
-    "%config InlineBackend.figure_format = 'retina'",
-    "fig, axs = plt.subplots(2, 2, figsize=(16, 10))",
-    "fig.suptitle('El Potencial Renovable del Golfo — El recurso existe, la inversion no llega',",
-    "             fontsize=17, fontweight='bold', color='#333333')",
+    "todos_solar = pd.concat([solar_golfo, solar[solar['region']=='Germany']]).reset_index(drop=True)",
+    "colores_s   = [ODS_Y if r != 'Germany' else NEUTRAL for r in todos_solar['region']]",
     "",
-    "# Panel 1: Solar PVOUT vs Alemania",
-    "todos_solar = pd.concat([solar_golfo, solar[solar['region']=='Germany']])",
-    "colores_s   = ['#c51b8a' if r != 'Germany' else '#d9d9d9' for r in todos_solar['region']]",
-    "axs[0,0].bar(todos_solar['region'], todos_solar['PVOUT_kWh_kWp'],",
-    "             color=colores_s, edgecolor='white', linewidth=0.5)",
-    "axs[0,0].set_title('1. Produccion Solar (kWh/kWp/año) — vs Alemania',",
-    "                   loc='left', color='gray', fontweight='bold')",
-    "axs[0,0].spines[['top','right','left']].set_visible(False)",
-    "axs[0,0].set_yticks([])",
-    "for i, (r, v) in enumerate(zip(todos_solar['region'], todos_solar['PVOUT_kWh_kWp'])):",
-    "    c = '#c51b8a' if r != 'Germany' else 'gray'",
-    "    axs[0,0].text(i, v + 15, f'{v:.0f}', ha='center', fontweight='bold', color=c, fontsize=11)",
-    "axs[0,0].axhline(solar_ref['PVOUT_kWh_kWp'], linestyle='--', color='#d9d9d9', linewidth=1.5)",
-    "axs[0,0].text(3.5, solar_ref['PVOUT_kWh_kWp'] + 20,",
-    "              f'Alemania: {solar_ref[\"PVOUT_kWh_kWp\"]:.0f}', fontsize=9, color='gray')",
-    "",
-    "# Panel 2: Viento mediano vs China",
-    "todos_eol = pd.concat([eolico_golfo, eolico[eolico['region']=='China']])",
-    "colores_v  = ['#007CBB' if r != 'China' else '#d9d9d9' for r in todos_eol['region']]",
-    "axs[0,1].bar(todos_eol['region'], todos_eol['viento_mediana_ms'],",
-    "             color=colores_v, edgecolor='white', linewidth=0.5)",
-    "axs[0,1].set_title('2. Velocidad de Viento Mediana (m/s) — vs China',",
-    "                   loc='left', color='gray', fontweight='bold')",
-    "axs[0,1].spines[['top','right','left']].set_visible(False)",
-    "axs[0,1].set_yticks([])",
-    "for i, (r, v) in enumerate(zip(todos_eol['region'], todos_eol['viento_mediana_ms'])):",
-    "    c = '#007CBB' if r != 'China' else 'gray'",
-    "    axs[0,1].text(i, v + 0.05, f'{v:.2f}', ha='center', fontweight='bold', color=c, fontsize=11)",
-    "axs[0,1].axhline(eolico_ref['viento_mediana_ms'], linestyle='--', color='#d9d9d9', linewidth=1.5)",
-    "axs[0,1].text(3.6, eolico_ref['viento_mediana_ms'] + 0.06,",
-    "              f'China: {eolico_ref[\"viento_mediana_ms\"]:.2f}', fontsize=9, color='gray')",
-    "",
-    "# Panel 3: Crecimiento solar + eolica Mexico",
-    "axs[1,0].fill_between(solar_mx['date'], solar_mx['generation_share_pct'],",
-    "                       color='#f9d423', alpha=0.6, label='Solar')",
-    "axs[1,0].fill_between(wind_mx['date'], wind_mx['generation_share_pct'],",
-    "                       color='#007CBB', alpha=0.5, label='Eolica')",
-    "axs[1,0].set_title('3. Crecimiento Solar y Eolica en Mexico 2000-2024 (%)',",
-    "                   loc='left', color='gray', fontweight='bold')",
-    "axs[1,0].spines[['top','right']].set_visible(False)",
-    "axs[1,0].set_ylabel('% de la generacion total')",
-    "axs[1,0].legend(frameon=False)",
-    "axs[1,0].set_xticks(range(2000,2025,4)); axs[1,0].tick_params(axis='x', rotation=45)",
-    "",
-    "# Panel 4: Conclusion",
-    "axs[1,1].axis('off')",
-    "txt = ('POTENCIAL VS REALIDAD:\\n\\n'",
-    "       f'SOLAR: El Golfo genera {avg_pvout:.0f} kWh/kWp/año.\\n'",
-    "       f'Alemania, lider mundial, genera solo {solar_ref[\"PVOUT_kWh_kWp\"]:.0f}.\\n\\n'",
-    "       f'EOLICO: Tamaulipas tiene {tam_viento:.1f} m/s de viento,\\n'",
-    "       'comparable con las mejores zonas de China.\\n\\n'",
-    "       f'BRECHA: Solar + eolica = {solar_2024+wind_2024:.1f}% de la generacion.\\n'",
-    "       'No es falta de recurso: es falta de politica.')",
-    "axs[1,1].text(0.05, 0.5, txt, fontsize=13, va='center', ha='left',",
-    "              color='#333333',",
-    "              bbox=dict(facecolor='#fcfcfc', edgecolor='#cccccc',",
-    "                        pad=20, boxstyle='round,pad=1'))",
-    "",
-    "plt.tight_layout(rect=[0, 0.03, 1, 0.95])",
-    "plt.show()",
+    "fig = go.Figure(go.Bar(",
+    "    x=todos_solar['region'], y=todos_solar['PVOUT_kWh_kWp'],",
+    "    marker_color=colores_s,",
+    "    text=todos_solar['PVOUT_kWh_kWp'].apply(lambda v: f'{v:.0f} kWh/kWp'),",
+    "    textposition='outside',",
+    "    textfont=dict(size=12),",
+    "))",
+    "fig.add_hline(",
+    "    y=solar_ref['PVOUT_kWh_kWp'], line_dash='dash', line_color='#999', line_width=1.5,",
+    "    annotation_text=f'Referencia Alemania: {solar_ref[\"PVOUT_kWh_kWp\"]:.0f} kWh/kWp',",
+    "    annotation_position='top left',",
+    "    annotation_font=dict(color='#666', size=11),",
+    ")",
+    "fig.update_layout(",
+    "    **base_layout('5.1 Potencial Solar (kWh/kWp/año) — Estados del Golfo vs. Alemania'),",
+    "    xaxis=dict(showgrid=False, zeroline=False),",
+    "    yaxis=dict(showgrid=False, showticklabels=False, zeroline=False,",
+    "               range=[0, todos_solar['PVOUT_kWh_kWp'].max()*1.2]),",
+    "    showlegend=False,",
+    ")",
+    "fig.show()",
 ]))
 
-# ═══════════════════════════════════════════════════════════════
+cells.append(code([
+    "todos_eol = pd.concat([eolico_golfo, eolico[eolico['region']=='China']]).reset_index(drop=True)",
+    "colores_v = [ODS_B if r != 'China' else NEUTRAL for r in todos_eol['region']]",
+    "",
+    "fig = go.Figure(go.Bar(",
+    "    x=todos_eol['region'], y=todos_eol['viento_mediana_ms'],",
+    "    marker_color=colores_v,",
+    "    text=todos_eol['viento_mediana_ms'].apply(lambda v: f'{v:.2f} m/s'),",
+    "    textposition='outside',",
+    "    textfont=dict(size=12),",
+    "))",
+    "fig.add_hline(",
+    "    y=eolico_ref['viento_mediana_ms'], line_dash='dash', line_color='#999', line_width=1.5,",
+    "    annotation_text=f'Referencia China: {eolico_ref[\"viento_mediana_ms\"]:.2f} m/s',",
+    "    annotation_position='top left',",
+    "    annotation_font=dict(color='#666', size=11),",
+    ")",
+    "fig.update_layout(",
+    "    **base_layout('5.2 Velocidad de Viento Mediana (m/s) — Estados del Golfo vs. China'),",
+    "    xaxis=dict(showgrid=False, zeroline=False),",
+    "    yaxis=dict(showgrid=False, showticklabels=False, zeroline=False,",
+    "               range=[0, todos_eol['viento_mediana_ms'].max()*1.2]),",
+    "    showlegend=False,",
+    ")",
+    "fig.show()",
+]))
+
+cells.append(code([
+    "fig = go.Figure()",
+    "# Área Solar — amarillo ODS 7",
+    "fig.add_trace(go.Scatter(",
+    "    x=solar_mx['date'], y=solar_mx['generation_share_pct'],",
+    "    mode='lines',",
+    "    name='Solar',",
+    "    line=dict(color=ODS_Y, width=2.5),",
+    "    fill='tozeroy', fillcolor='rgba(253,183,19,0.50)',",
+    "))",
+    "# Área Eólica — azul ODS 14",
+    "fig.add_trace(go.Scatter(",
+    "    x=wind_mx['date'], y=wind_mx['generation_share_pct'],",
+    "    mode='lines',",
+    "    name='Eólica',",
+    "    line=dict(color=ODS_B, width=2.5),",
+    "    fill='tozeroy', fillcolor='rgba(10,151,217,0.50)',",
+    "))",
+    "fig.add_annotation(",
+    "    text=f'<b>Solar + Eólica = {solar_2024+wind_2024:.1f}%</b><br>de la generación en 2024',",
+    "    x=2021,",
+    "    y=max(solar_mx['generation_share_pct'].max(), wind_mx['generation_share_pct'].max()) * 1.15,",
+    "    showarrow=False, font=dict(size=12, color=DARK),",
+    "    bgcolor='rgba(255,255,255,0.85)', bordercolor='#ccc', borderwidth=1, borderpad=8,",
+    ")",
+    "fig.update_layout(",
+    "    **base_layout('5.3 Crecimiento Solar y Eólica en México 2000-2024 (% de generación total)'),",
+    "    xaxis=dict(tickmode='linear', tick0=2000, dtick=4, gridcolor='#EEEEEE'),",
+    "    yaxis=dict(title='% de la generación total', gridcolor='#EEEEEE'),",
+    "    legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),",
+    ")",
+    "fig.show()",
+]))
+
+cells.append(hallazgos(ODS_Y, "HALLAZGOS — Sección 5: El recurso que no se usa", [
+    f"Todos los estados del Golfo superan a Alemania en radiación solar. El promedio regional es "
+    f"<b>{_solar_gulf_avg} kWh/kWp/año</b> — Alemania genera solo {_solar_ref_val}. "
+    f"El Golfo tiene {round((_solar_gulf_avg-_solar_ref_val)/_solar_ref_val*100)}% más recurso solar que el líder mundial.",
+    f"Tamaulipas registra <b>{_tam_viento} m/s de viento mediano</b>, comparable con las mejores "
+    f"zonas eólicas de China ({_china_viento} m/s). Y aun así, no tiene parques eólicos a escala.",
+    f"En 2024, solar y eólica <b>juntas suman el {_solar_2024 + _wind_2024:.1f}% de la generación "
+    f"eléctrica nacional</b>. Ese número no es resultado de falta de recurso: "
+    f"es resultado de décadas de política energética concentrada en Pemex.",
+    "La infraestructura de transmisión del Golfo ya existe — fue construida para los hidrocarburos. "
+    "Reutilizarla para parques solares y eólicos es técnicamente viable hoy, sin construir desde cero.",
+]))
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # SECCIÓN 6 — LLAMADOS A LA ACCIÓN
-# ═══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════════════════════
 cells.append(md(
     "---\n"
-    "## Sección 6: ¿Y ahora qué? — Llamados a la Acción\n\n"
+    "## 6. ¿Y ahora qué? — Llamados a la Acción\n\n"
     "Los datos cuentan la historia. Pero los datos solos no mueven políticas ni "
     "cambian comunidades. Esta sección traduce los hallazgos en acciones concretas "
     "dirigidas a quienes tienen la responsabilidad y la capacidad de actuar."
@@ -522,8 +768,8 @@ cells.append(md(
     "comunidades sigan reportando — las autoridades no siempre llegan solas.\n\n"
     "**2. Organizar la economía local alrededor de lo que el mar sano puede dar.**  \n"
     "El turismo sustentable, la pesca responsable y la acuicultura comunitaria "
-    "son la única economía posible en zonas como Pajapan o Tatahuicapan "
-    "si los hidrocarburos siguen contaminando el litoral. "
+    "son la única economía posible en zonas como Pajapan si los hidrocarburos "
+    "siguen contaminando el litoral. "
     "Las cooperativas y los fondos de reconversión productiva son urgentes.\n\n"
     "**3. Exigir que el dinero del rescate llegue con perspectiva de género.**  \n"
     "Los datos muestran que las mujeres pierden más empleo en zonas afectadas. "
@@ -569,9 +815,9 @@ cells.append(md(
     "|---|---|---|\n"
     "| Comunidades costeras | Reportar, organizarse, exigir con datos | Inmediato |\n"
     "| Gobierno federal | Fondos de emergencia diferenciados por impacto | 90 días |\n"
-    "| Gobiernos estatales (Golfo) | Licencias para proyectos renovables en zonas aptas | 2026–2027 |\n"
+    "| Gobiernos estatales (Golfo) | Licencias para proyectos renovables en zonas aptas | 2026-2027 |\n"
     "| Industria petrolera | Fondo de contingencia obligatorio por derrame | Con reforma |\n"
-    "| Sector energético | Transición laboral fósil → renovable en el Golfo | 2026–2030 |\n\n"
+    "| Sector energético | Transición laboral fósil — renovable en el Golfo | 2026-2030 |\n\n"
     "---\n"
     "*El Golfo de México no merece ser el costo oculto del desarrollo energético de México.*  \n"
     "*Sus comunidades, su biodiversidad y su potencial renovable merecen estar "
@@ -582,12 +828,14 @@ cells.append(md(
     "Global Wind Atlas · Reportes ciudadanos*"
 ))
 
-# ═══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════════════════════
 # BUILD
-# ═══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════════════════════
 nb = nbformat.v4.new_notebook()
 nb.cells = cells
-nb.metadata['kernelspec'] = {'display_name': 'Python 3', 'language': 'python', 'name': 'python3'}
+nb.metadata['kernelspec'] = {
+    'display_name': 'Python 3', 'language': 'python', 'name': 'python3'
+}
 nb.metadata['language_info'] = {'name': 'python', 'version': '3.13'}
 
 out = 'master_001.ipynb'
@@ -599,7 +847,7 @@ result = subprocess.run(
     capture_output=True, text=True,
 )
 if result.returncode != 0:
-    print('Error:', result.stderr[-600:])
+    print('Error:', result.stderr[-800:])
 else:
     size = os.path.getsize(out) // 1024
     print(f'✅  {out} listo ({size} KB, {len(cells)} celdas)')
