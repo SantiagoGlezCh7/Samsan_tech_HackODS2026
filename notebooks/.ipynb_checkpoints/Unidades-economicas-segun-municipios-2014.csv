@@ -1,0 +1,239 @@
+"Nation ID","Nation","State ID","State","Municipality ID","Municipality","Economic Unit","digitos"
+"mex","México",2,"Baja California",2001,"Ensenada",194,4
+"mex","México",2,"Baja California",2002,"Mexicali",25,4
+"mex","México",2,"Baja California",2005,"Playas de Rosarito",7,4
+"mex","México",3,"Baja California Sur",3001,"Comondú",221,4
+"mex","México",3,"Baja California Sur",3002,"Mulegé",207,4
+"mex","México",3,"Baja California Sur",3003,"La Paz",160,4
+"mex","México",4,"Campeche",4002,"Campeche",168,4
+"mex","México",4,"Campeche",4003,"Carmen",301,4
+"mex","México",4,"Campeche",4004,"Champotón",163,4
+"mex","México",4,"Campeche",4007,"Palizada",49,4
+"mex","México",5,"Coahuila de Zaragoza",5036,"Viesca",6,4
+"mex","México",6,"Colima",6001,"Armería",5,4
+"mex","México",6,"Colima",6002,"Colima",3,4
+"mex","México",6,"Colima",6007,"Manzanillo",118,4
+"mex","México",6,"Colima",6009,"Tecomán",13,4
+"mex","México",7,"Chiapas",7002,"Acala",3,4
+"mex","México",7,"Chiapas",7003,"Acapetahua",38,4
+"mex","México",7,"Chiapas",7020,"La Concordia",15,4
+"mex","México",7,"Chiapas",7051,"Mapastepec",13,4
+"mex","México",7,"Chiapas",7065,"Palenque",4,4
+"mex","México",7,"Chiapas",7069,"Pijijiapan",65,4
+"mex","México",7,"Chiapas",7083,"Socoltenango",3,4
+"mex","México",7,"Chiapas",7089,"Tapachula",39,4
+"mex","México",7,"Chiapas",7092,"Tecpatán",6,4
+"mex","México",7,"Chiapas",7106,"Venustiano Carranza",6,4
+"mex","México",7,"Chiapas",7107,"Villa Corzo",14,4
+"mex","México",8,"Chihuahua",8002,"Aldama",6,4
+"mex","México",8,"Chihuahua",8048,"Namiquipa",5,4
+"mex","México",10,"Durango",10005,"Durango",3,5
+"mex","México",12,"Guerrero",12001,"Acapulco de Juárez",256,5
+"mex","México",12,"Guerrero",12003,"Ajuchitlán del Progreso",17,5
+"mex","México",12,"Guerrero",12006,"Apaxtla",32,5
+"mex","México",12,"Guerrero",12011,"Atoyac de Álvarez",16,5
+"mex","México",12,"Guerrero",12013,"Azoyú",4,5
+"mex","México",12,"Guerrero",12014,"Benito Juárez",88,5
+"mex","México",12,"Guerrero",12017,"Cocula",51,5
+"mex","México",12,"Guerrero",12018,"Copala",22,5
+"mex","México",12,"Guerrero",12021,"Coyuca de Benítez",93,5
+"mex","México",12,"Guerrero",12027,"Cutzamala de Pinzón",30,5
+"mex","México",12,"Guerrero",12030,"Florencio Villarreal",199,5
+"mex","México",12,"Guerrero",12035,"Iguala de la Independencia",18,5
+"mex","México",12,"Guerrero",12038,"Zihuatanejo de Azueta",27,5
+"mex","México",12,"Guerrero",12039,"Juan R. Escudero",11,5
+"mex","México",12,"Guerrero",12046,"Ometepec",78,5
+"mex","México",12,"Guerrero",12056,"Tecoanapa",8,5
+"mex","México",12,"Guerrero",12059,"Tepecoacuilco de Trujano",27,5
+"mex","México",12,"Guerrero",12068,"La Unión de Isidoro Montes de Oca",48,5
+"mex","México",12,"Guerrero",12073,"Zirándaro",32,5
+"mex","México",12,"Guerrero",12075,"Eduardo Neri",4,5
+"mex","México",12,"Guerrero",12077,"Marquelia",13,5
+"mex","México",13,"Hidalgo",13058,"Tasquillo",5,5
+"mex","México",14,"Jalisco",14020,"Cabo Corrientes",8,5
+"mex","México",14,"Jalisco",14022,"Cihuatlán",6,5
+"mex","México",14,"Jalisco",14027,"Cuautitlán de García Barragán",4,5
+"mex","México",14,"Jalisco",14030,"Chapala",6,5
+"mex","México",14,"Jalisco",14047,"Jamay",17,5
+"mex","México",14,"Jalisco",14066,"Poncitlán",14,5
+"mex","México",14,"Jalisco",14095,"Teuchitlán",3,5
+"mex","México",14,"Jalisco",14096,"Tizapán el Alto",6,5
+"mex","México",14,"Jalisco",14099,"Tolimán",3,5
+"mex","México",14,"Jalisco",14105,"Tototlán",3,5
+"mex","México",14,"Jalisco",14107,"Tuxcueca",5,5
+"mex","México",14,"Jalisco",14110,"Unión de Tula",5,5
+"mex","México",14,"Jalisco",14114,"Villa Corona",3,5
+"mex","México",14,"Jalisco",14124,"Zapotlanejo",3,5
+"mex","México",15,"Estado de México",15003,"Aculco",6,5
+"mex","México",15,"Estado de México",15105,"Tlatlaya",4,5
+"mex","México",15,"Estado de México",15110,"Valle de Bravo",3,5
+"mex","México",15,"Estado de México",15112,"Villa del Carbón",7,5
+"mex","México",16,"Michoacán de Ocampo",16003,"Álvaro Obregón",8,5
+"mex","México",16,"Michoacán de Ocampo",16008,"Aquila",15,5
+"mex","México",16,"Michoacán de Ocampo",16032,"Erongarícuaro",10,5
+"mex","México",16,"Michoacán de Ocampo",16034,"Hidalgo",4,5
+"mex","México",16,"Michoacán de Ocampo",16035,"La Huacana",90,5
+"mex","México",16,"Michoacán de Ocampo",16038,"Huetamo",4,5
+"mex","México",16,"Michoacán de Ocampo",16052,"Lázaro Cárdenas",48,5
+"mex","México",16,"Michoacán de Ocampo",16053,"Morelia",4,5
+"mex","México",16,"Michoacán de Ocampo",16066,"Pátzcuaro",28,5
+"mex","México",16,"Michoacán de Ocampo",16073,"Quiroga",4,5
+"mex","México",16,"Michoacán de Ocampo",16074,"Cojumatlán de Régules",10,5
+"mex","México",16,"Michoacán de Ocampo",16110,"Zinapécuaro",5,5
+"mex","México",16,"Michoacán de Ocampo",16112,"Zitácuaro",7,5
+"mex","México",18,"Nayarit",18001,"Acaponeta",16,5
+"mex","México",18,"Nayarit",18004,"Compostela",36,5
+"mex","México",18,"Nayarit",18009,"Del Nayar",61,5
+"mex","México",18,"Nayarit",18010,"Rosamorada",11,5
+"mex","México",18,"Nayarit",18011,"Ruíz",4,5
+"mex","México",18,"Nayarit",18012,"San Blas",151,5
+"mex","México",18,"Nayarit",18014,"Santa María del Oro",11,5
+"mex","México",18,"Nayarit",18015,"Santiago Ixcuintla",438,5
+"mex","México",18,"Nayarit",18016,"Tecuala",192,5
+"mex","México",18,"Nayarit",18018,"Tuxpan",197,5
+"mex","México",18,"Nayarit",18020,"Bahía de Banderas",19,5
+"mex","México",20,"Oaxaca",20039,"Heroica Ciudad de Huajuapan de León",25,5
+"mex","México",20,"Oaxaca",20043,"Juchitán de Zaragoza",71,5
+"mex","México",20,"Oaxaca",20057,"Matías Romero Avendaño",9,5
+"mex","México",20,"Oaxaca",20124,"San Blas Atempa",3,5
+"mex","México",20,"Oaxaca",20130,"San Dionisio del Mar",10,5
+"mex","México",20,"Oaxaca",20141,"San Francisco del Mar",41,5
+"mex","México",20,"Oaxaca",20143,"San Francisco Ixhuatán",128,5
+"mex","México",20,"Oaxaca",20169,"San José Independencia",99,5
+"mex","México",20,"Oaxaca",20232,"San Lucas Ojitlán",317,5
+"mex","México",20,"Oaxaca",20248,"San Mateo del Mar",116,5
+"mex","México",20,"Oaxaca",20307,"San Pedro Huamelula",23,5
+"mex","México",20,"Oaxaca",20309,"San Pedro Ixcatlán",187,5
+"mex","México",20,"Oaxaca",20327,"San Pedro Tapanatepec",32,5
+"mex","México",20,"Oaxaca",20406,"Santa María Chilchotla",84,5
+"mex","México",20,"Oaxaca",20413,"Santa María Huatulco",27,5
+"mex","México",20,"Oaxaca",20439,"Santa María Tonameca",23,5
+"mex","México",20,"Oaxaca",20441,"Santa María Xadani",7,5
+"mex","México",20,"Oaxaca",20453,"Santiago Astata",17,5
+"mex","México",20,"Oaxaca",20467,"Santiago Jamiltepec",30,5
+"mex","México",20,"Oaxaca",20482,"Santiago Pinotepa Nacional",68,5
+"mex","México",20,"Oaxaca",20559,"San Juan Bautista Valle Nacional",6,5
+"mex","México",21,"Puebla",21025,"Ayotoxco de Guerrero",31,5
+"mex","México",21,"Puebla",21067,"Guadalupe Victoria",7,5
+"mex","México",21,"Puebla",21088,"Jonotla",6,5
+"mex","México",21,"Puebla",21114,"Puebla",20,5
+"mex","México",21,"Puebla",21145,"San Sebastián Tlacotepec",7,5
+"mex","México",21,"Puebla",21158,"Tenampulco",34,5
+"mex","México",23,"Quintana Roo",23001,"Cozumel",11,5
+"mex","México",23,"Quintana Roo",23003,"Isla Mujeres",8,5
+"mex","México",23,"Quintana Roo",23005,"Benito Juárez",11,5
+"mex","México",23,"Quintana Roo",23010,"Bacalar",3,5
+"mex","México",24,"San Luis Potosí",24016,"Ebano",5,5
+"mex","México",24,"San Luis Potosí",24034,"San Vicente Tancuayalab",20,5
+"mex","México",24,"San Luis Potosí",24037,"Tamazunchale",6,5
+"mex","México",24,"San Luis Potosí",24038,"Tampacán",5,5
+"mex","México",24,"San Luis Potosí",24042,"Tanquián de Escobedo",7,5
+"mex","México",25,"Sinaloa",25001,"Ahome",259,5
+"mex","México",25,"Sinaloa",25002,"Angostura",94,5
+"mex","México",25,"Sinaloa",25003,"Badiraguato",5,5
+"mex","México",25,"Sinaloa",25005,"Cosalá",5,5
+"mex","México",25,"Sinaloa",25006,"Culiacán",376,5
+"mex","México",25,"Sinaloa",25007,"Choix",15,5
+"mex","México",25,"Sinaloa",25008,"Elota",31,5
+"mex","México",25,"Sinaloa",25009,"Escuinapa",184,5
+"mex","México",25,"Sinaloa",25011,"Guasave",319,5
+"mex","México",25,"Sinaloa",25012,"Mazatlán",297,5
+"mex","México",25,"Sinaloa",25016,"San Ignacio",42,5
+"mex","México",25,"Sinaloa",25017,"Sinaloa",8,5
+"mex","México",25,"Sinaloa",25018,"Navolato",90,5
+"mex","México",26,"Sonora",26003,"Álamos",11,5
+"mex","México",26,"Sonora",26012,"Bácum",6,5
+"mex","México",26,"Sonora",26017,"Caborca",27,5
+"mex","México",26,"Sonora",26018,"Cajeme",4,5
+"mex","México",26,"Sonora",26025,"Empalme",42,5
+"mex","México",26,"Sonora",26029,"Guaymas",105,5
+"mex","México",26,"Sonora",26030,"Hermosillo",49,5
+"mex","México",26,"Sonora",26033,"Huatabampo",146,5
+"mex","México",26,"Sonora",26047,"Pitiquito",9,5
+"mex","México",26,"Sonora",26048,"Puerto Peñasco",56,5
+"mex","México",26,"Sonora",26057,"San Pedro de la Cueva",6,5
+"mex","México",26,"Sonora",26072,"San Ignacio Río Muerto",8,5
+"mex","México",27,"Tabasco",27002,"Cárdenas",273,5
+"mex","México",27,"Tabasco",27003,"Centla",717,5
+"mex","México",27,"Tabasco",27004,"Centro",412,5
+"mex","México",27,"Tabasco",27005,"Comalcalco",52,5
+"mex","México",27,"Tabasco",27007,"Emiliano Zapata",80,5
+"mex","México",27,"Tabasco",27010,"Jalpa de Méndez",3,5
+"mex","México",27,"Tabasco",27011,"Jonuta",38,5
+"mex","México",27,"Tabasco",27012,"Macuspana",237,5
+"mex","México",27,"Tabasco",27013,"Nacajuca",147,5
+"mex","México",27,"Tabasco",27014,"Paraíso",158,5
+"mex","México",27,"Tabasco",27017,"Tenosique",15,5
+"mex","México",28,"Tamaulipas",28002,"Aldama",39,5
+"mex","México",28,"Tamaulipas",28007,"Camargo",48,5
+"mex","México",28,"Tamaulipas",28009,"Ciudad Madero",27,5
+"mex","México",28,"Tamaulipas",28014,"Guerrero",5,5
+"mex","México",28,"Tamaulipas",28022,"Matamoros",49,5
+"mex","México",28,"Tamaulipas",28025,"Miguel Alemán",7,5
+"mex","México",28,"Tamaulipas",28030,"Padilla",5,5
+"mex","México",28,"Tamaulipas",28035,"San Fernando",23,5
+"mex","México",28,"Tamaulipas",28038,"Tampico",164,5
+"mex","México",29,"Tlaxcala",29003,"Atlangatepec",6,5
+"mex","México",29,"Tlaxcala",29014,"Hueyotlipan",4,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30003,"Acayucan",4,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30004,"Actopan",3,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30011,"Alvarado",432,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30012,"Amatitlán",45,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30015,"Angel R. Cabada",19,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30028,"Boca del Río",7,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30032,"Catemaco",45,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30033,"Cazones de Herrera",5,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30045,"Cosamaloapan de Carpio",28,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30048,"Cosoleacaque",6,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30054,"Chacaltianguis",43,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30061,"Las Choapas",5,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30069,"Gutiérrez Zamora",6,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30070,"Hidalgotitlán",7,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30073,"Hueyapan de Ocampo",7,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30075,"Ignacio de la Llave",22,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30084,"Ixmatlahuacan",4,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30091,"Jesús Carranza",17,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30094,"Juan Rodríguez Clara",62,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30097,"Lerdo de Tejada",7,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30104,"Mecayapan",5,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30109,"Misantla",4,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30114,"Nautla",8,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30121,"Ozuluama de Mascareñas",15,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30122,"Pajapan",37,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30124,"Papantla",3,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30130,"Playa Vicente",9,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30139,"Saltabarranca",3,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30141,"San Andrés Tuxtla",14,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30142,"San Juan Evangelista",37,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30150,"Tamalín",9,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30151,"Tamiahua",108,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30152,"Tampico Alto",75,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30154,"Tantima",3,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30158,"Tecolutla",31,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30169,"José Azueta",21,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30178,"Tlacotalpan",282,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30181,"Tlalixcoyan",5,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30190,"Tuxtilla",11,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30191,"Ursulo Galván",9,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30192,"Vega de Alatorre",11,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30193,"Veracruz",14,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30207,"Tres Valles",3,5
+"mex","México",30,"Veracruz de Ignacio de la Llave",30209,"Tatahuicapan de Juárez",3,5
+"mex","México",31,"Yucatán",31011,"Celestún",159,5
+"mex","México",31,"Yucatán",31027,"Dzidzantún",3,5
+"mex","México",31,"Yucatán",31029,"Dzilam González",4,5
+"mex","México",31,"Yucatán",31061,"Río Lagartos",45,5
+"mex","México",31,"Yucatán",31065,"San Felipe",22,5
+"mex","México",31,"Yucatán",31068,"Sinanché",24,5
+"mex","México",31,"Yucatán",31083,"Telchac Puerto",35,5
+"mex","México",31,"Yucatán",31096,"Tizimín",28,5
+"mex","México",31,"Yucatán",31106,"Yobaín",13,5
+"mex","México",32,"Zacatecas",32001,"Apozol",7,5
+"mex","México",32,"Zacatecas",32020,"Jerez",7,5
+"mex","México",32,"Zacatecas",32029,"Miguel Auza",4,5
+"mex","México",32,"Zacatecas",32040,"Sain Alto",17,5
+"mex","México",32,"Zacatecas",32042,"Sombrerete",3,5
+"mex","México",32,"Zacatecas",32045,"Tepechitlán",14,5
+"mex","México",32,"Zacatecas",32047,"Teúl de González Ortega",21,5
+"mex","México",32,"Zacatecas",32049,"Valparaíso",21,5
+"mex","México",32,"Zacatecas",32058,"Santa María de la Paz",9,5
