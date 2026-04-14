@@ -123,12 +123,8 @@ cells.append(code([
     "import plotly.graph_objects as go",
     "import plotly.express as px",
     "from plotly.subplots import make_subplots",
-    "from IPython.display import HTML, display as _disp",
     "import warnings",
     "warnings.filterwarnings('ignore')",
-    "",
-    "def show(fig):",
-    "    _disp(HTML(fig.to_html(full_html=False, include_plotlyjs='cdn')))",
     "",
     "ODS_Y   = '#FDB713'   # ODS 7  Energía Asequible — amarillo",
     "ODS_G   = '#A21942'   # ODS 8  Trabajo Decente   — guinda",
@@ -222,7 +218,7 @@ cells.append(code([
     "    title_font=dict(color=ODS_B), tickfont=dict(color=ODS_B),",
     "    secondary_y=True, showgrid=False,",
     ")",
-    "show(fig)",
+    "fig.show()",
 ]))
 
 cells.append(hallazgos(ODS_B, "HALLAZGOS — Sección 1: El impacto en números", [
@@ -291,7 +287,7 @@ cells.append(code([
     "    font=dict(size=12), bgcolor='rgba(10,151,217,0.07)',",
     "    bordercolor=ODS_B, borderwidth=1, borderpad=8,",
     ")",
-    "show(fig)",
+    "fig.show()",
 ]))
 
 cells.append(code([
@@ -329,7 +325,7 @@ cells.append(code([
     "    bgcolor='rgba(255,255,255,0.9)',",
     "    bordercolor=ODS_G, borderwidth=1, borderpad=8,",
     ")",
-    "show(fig)",
+    "fig.show()",
 ]))
 
 cells.append(hallazgos(ODS_G, "HALLAZGOS — Sección 2: Los que más pierden", [
@@ -392,7 +388,7 @@ cells.append(code([
     "    yaxis=dict(showgrid=False, zeroline=False),",
     "    showlegend=False,",
     ")",
-    "show(fig)",
+    "fig.show()",
 ]))
 
 cells.append(code([
@@ -417,7 +413,7 @@ cells.append(code([
     "    legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),",
     "    yaxis=dict(title='Tasa de desempleo (%)', gridcolor='#EEEEEE'),",
     ")",
-    "show(fig)",
+    "fig.show()",
 ]))
 
 cells.append(code([
@@ -434,7 +430,7 @@ cells.append(code([
     "    **base_layout('3.3 Concentración de Reportes de Chapopote por Municipio', height=460),",
     "    legend=dict(orientation='h', yanchor='bottom', y=-0.12, xanchor='center', x=0.5),",
     ")",
-    "show(fig)",
+    "fig.show()",
 ]))
 
 cells.append(md("### Mapa 3.4 — Zonas de alerta laboral post-derrame"))
@@ -469,7 +465,7 @@ cells.append(code([
     "    legend=dict(yanchor='top', y=0.98, xanchor='right', x=0.98,",
     "                bgcolor='rgba(255,255,255,0.85)', title_text='Nivel de Respuesta'),",
     ")",
-    "show(fig_mapa)",
+    "fig_mapa.show()",
 ]))
 
 cells.append(hallazgos(ODS_G, "HALLAZGOS — Sección 3: La herida humana", [
@@ -551,7 +547,7 @@ cells.append(code([
     "    font=dict(size=12, color=ODS_G),",
     "    bgcolor='rgba(162,25,66,0.06)', bordercolor=ODS_G, borderwidth=1, borderpad=8,",
     ")",
-    "show(fig)",
+    "fig.show()",
 ]))
 
 cells.append(code([
@@ -576,7 +572,7 @@ cells.append(code([
     "    yaxis=dict(title='% de la producción nacional', range=[75,92], gridcolor='#EEEEEE'),",
     "    showlegend=False,",
     ")",
-    "show(fig)",
+    "fig.show()",
 ]))
 
 cells.append(code([
@@ -609,7 +605,7 @@ cells.append(code([
     "    yaxis=dict(title='% de la generación total', gridcolor='#EEEEEE'),",
     "    legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),",
     ")",
-    "show(fig)",
+    "fig.show()",
 ]))
 
 cells.append(hallazgos(ODS_Y, "HALLAZGOS — Sección 4: Por qué sigue pasando", [
@@ -676,7 +672,7 @@ cells.append(code([
     "               range=[0, todos_solar['PVOUT_kWh_kWp'].max()*1.2]),",
     "    showlegend=False,",
     ")",
-    "show(fig)",
+    "fig.show()",
 ]))
 
 cells.append(code([
@@ -703,7 +699,7 @@ cells.append(code([
     "               range=[0, todos_eol['viento_mediana_ms'].max()*1.2]),",
     "    showlegend=False,",
     ")",
-    "show(fig)",
+    "fig.show()",
 ]))
 
 cells.append(code([
@@ -737,7 +733,7 @@ cells.append(code([
     "    yaxis=dict(title='% de la generación total', gridcolor='#EEEEEE'),",
     "    legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),",
     ")",
-    "show(fig)",
+    "fig.show()",
 ]))
 
 cells.append(hallazgos(ODS_Y, "HALLAZGOS — Sección 5: El recurso que no se usa", [
