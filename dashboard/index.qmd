@@ -1,7 +1,7 @@
---- 
+---
 title: "Derrame de Petroleo en el Golfo de Mexico"
 author: SamsanTech_HackODS
-format: 
+format:
  dashboard:
      embed-resources: true
 logo: image/logo.png
@@ -14,6 +14,16 @@ theme:
 ---
 
 ::: {.tabset}
+
+### Análisis Completo
+
+Se muestra el análisis integrado `notebooks/master_001.ipynb`:
+historia del derrame, impacto socioeconómico, infraestructura de hidrocarburos,
+potencial renovable y llamados a la acción.
+
+```{=html}
+<iframe src="assets/master_001_outputs.html" style="width:100%;height:1200px;border:0;">Tu navegador no soporta iframes.</iframe>
+```
 
 ### Impacto Socioeconómico del Derrame
 
