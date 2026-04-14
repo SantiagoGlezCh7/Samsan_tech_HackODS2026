@@ -7,7 +7,6 @@
 ## Herramientas utilizadas
 - Google Gemini (Asistente de Jessica)
 - Claude (Asistente de Rodolfo)
-- [Si alguien usó Copilot, agregarlo aquí]
 
 ## Filosofía de uso
 Como equipo, decidimos utilizar la IA generativa estrictamente como un **acelerador de sintaxis (pair-programming) y maquetación visual**, no como un motor de decisiones. Nuestra regla fue: la IA puede sugerir cómo escribir el código (Matplotlib, Plotly, JSON crudo), pero el equipo dicta la narrativa, filtra los datos geográficamente e impone el rigor técnico. Si una gráfica no aportaba a nuestra historia del "Viaje del Héroe" en el Golfo de México, la salida de la IA era rechazada o reestructurada.
