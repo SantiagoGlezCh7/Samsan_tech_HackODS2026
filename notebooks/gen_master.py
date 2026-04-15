@@ -48,6 +48,21 @@ _renov_2024   = round(_mix[_mix['date']==2024]['Renovable_%'].values[0])
 _solar_2024   = round(_elec_mx[(_elec_mx['series']=='Solar') & (_elec_mx['date']==2024)]['generation_share_pct'].sum(), 1)
 _wind_2024    = round(_elec_mx[(_elec_mx['series']=='Wind')  & (_elec_mx['date']==2024)]['generation_share_pct'].sum(), 1)
 
+_ocup_df   = pd.read_csv(os.path.join(_BASE, 'ocupaciones_pesca.csv'))
+_pesca_edo = pd.read_csv(os.path.join(_BASE, 'trabajadores_pesqueros_estado.csv'))
+_pesca_edo['estado'] = _pesca_edo['State'].str.replace('Veracruz de Ignacio de la Llave', 'Veracruz', regex=False)
+_golfo_pesca_states = ['Veracruz', 'Tabasco', 'Campeche', 'Tamaulipas']
+_total_pesca_nac   = _pesca_edo['Workforce'].sum()
+_golfo_pesca_tot   = _pesca_edo[_pesca_edo['estado'].isin(_golfo_pesca_states)]['Workforce'].sum()
+_pct_golfo_pesca   = round(_golfo_pesca_tot / _total_pesca_nac * 100, 1)
+_ocup_expuestas = [
+    'Trabajadores en Actividades Pesqueras',
+    'Trabajadores de Apoyo en Actividades de Acuicultura y Pesca',
+    'Trabajadores en Actividades de Beneficio de Productos Pesqueros o Acuícolas',
+    'Dinamiteros y Buzos en Perforación de Pozos y en la Construcción',
+]
+_total_expuestos = _ocup_df[_ocup_df['Occupation'].isin(_ocup_expuestas)]['Workforce'].sum()
+
 _solar_df  = pd.read_csv(os.path.join(_BASE, 'potencial_solar_golfo_GSA.csv'))
 _eolico_df = pd.read_csv(os.path.join(_BASE, 'potencial_eolico_golfo_GWA.csv'))
 _solar_ref_val  = round(_solar_df[_solar_df['region']=='Germany']['PVOUT_kWh_kWp'].values[0])
@@ -73,22 +88,31 @@ cells.append(md(
     '<p style="color:#777;margin:4px 0;font-size:1.05em">HackODS 2026 · SamsanTech</p>\n'
     '<p style="margin:6px 0"><b>Equipo:</b> '
     'Jessica Álvarez · Santiago González · Rodolfo Rentería</p>\n'
-    '<div style="display:flex;gap:18px;justify-content:center;margin:22px 0">\n'
+    '<div style="display:flex;gap:28px;justify-content:center;margin:22px 0;flex-wrap:wrap">\n'
+    '<div style="text-align:center">'
     '<div style="width:92px;height:92px;background:#FDB713;border-radius:50%;display:flex;'
     'flex-direction:column;align-items:center;justify-content:center;color:white;'
-    'font-weight:bold;text-align:center;line-height:1.2">'
+    'font-weight:bold;text-align:center;line-height:1.2;margin:0 auto">'
     '<span style="font-size:1.8em">7</span>'
-    '<span style="font-size:0.65em;letter-spacing:1px">ODS</span></div>\n'
+    '<span style="font-size:0.65em;letter-spacing:1px">ODS</span></div>'
+    '<p style="font-size:0.75em;color:#555;margin:5px 0 0;max-width:110px">'
+    'Energía Asequible<br>y No Contaminante</p></div>\n'
+    '<div style="text-align:center">'
     '<div style="width:92px;height:92px;background:#A21942;border-radius:50%;display:flex;'
     'flex-direction:column;align-items:center;justify-content:center;color:white;'
-    'font-weight:bold;text-align:center;line-height:1.2">'
+    'font-weight:bold;text-align:center;line-height:1.2;margin:0 auto">'
     '<span style="font-size:1.8em">8</span>'
-    '<span style="font-size:0.65em;letter-spacing:1px">ODS</span></div>\n'
+    '<span style="font-size:0.65em;letter-spacing:1px">ODS</span></div>'
+    '<p style="font-size:0.75em;color:#555;margin:5px 0 0;max-width:110px">'
+    'Trabajo Decente y<br>Crecimiento Económico</p></div>\n'
+    '<div style="text-align:center">'
     '<div style="width:92px;height:92px;background:#0A97D9;border-radius:50%;display:flex;'
     'flex-direction:column;align-items:center;justify-content:center;color:white;'
-    'font-weight:bold;text-align:center;line-height:1.2">'
+    'font-weight:bold;text-align:center;line-height:1.2;margin:0 auto">'
     '<span style="font-size:1.8em">14</span>'
-    '<span style="font-size:0.65em;letter-spacing:1px">ODS</span></div>\n'
+    '<span style="font-size:0.65em;letter-spacing:1px">ODS</span></div>'
+    '<p style="font-size:0.75em;color:#555;margin:5px 0 0;max-width:110px">'
+    'Vida Submarina</p></div>\n'
     '</div>\n'
     '</div>\n\n'
     "Nuestro proyecto analiza cómo la dependencia petrolera de México expone a las "
@@ -156,13 +180,101 @@ cells.append(code([
     "elec        = pd.read_csv('../datos/electricity_sources.csv')",
     "solar       = pd.read_csv('../datos/potencial_solar_golfo_GSA.csv')",
     "eolico      = pd.read_csv('../datos/potencial_eolico_golfo_GWA.csv')",
+    "ocup_pesca  = pd.read_csv('../datos/ocupaciones_pesca.csv')",
+    "pesca_edo   = pd.read_csv('../datos/trabajadores_pesqueros_estado.csv')",
+    "pesca_edo['estado'] = pesca_edo['State'].str.replace('Veracruz de Ignacio de la Llave', 'Veracruz', regex=False)",
     "",
     "print('Datasets cargados:')",
     "for nombre, df in [('empleo ENOE', df_empleo), ('reportes derrame', df_derrames),",
     "                   ('distribucion', dist), ('produccion hidro', prod),",
     "                   ('electricity sources', elec), ('solar GSA', solar),",
-    "                   ('eolico GWA', eolico)]:",
+    "                   ('eolico GWA', eolico), ('ocupaciones pesca', ocup_pesca),",
+    "                   ('pesca por estado', pesca_edo)]:",
     "    print(f'  {nombre}: {df.shape[0]} filas x {df.shape[1]} columnas')",
+]))
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SECCIÓN 0 — EL ALIENTO DEL PLANETA
+# ═══════════════════════════════════════════════════════════════════════════════
+cells.append(md(
+    "---\n"
+    "## El Aliento del Planeta — ¿Qué está en juego en el Golfo?\n\n"
+    "El Golfo de México no es solo el escenario del derrame: es uno de los ecosistemas "
+    "marinos más productivos del planeta. Los arrecifes de coral sostienen el **25% de "
+    "toda la biodiversidad marina** pese a ocupar menos del 1% del fondo oceánico. "
+    "El Sistema Arrecifal Mesoamericano, que bordea el Golfo y el Caribe mexicano, genera "
+    "beneficios económicos superiores a los **4,500 millones de dólares anuales** en pesca, "
+    "turismo y protección costera.\n\n"
+    "Ese sistema está bajo presión directa: más del **70% de las amenazas** a los "
+    "ecosistemas costeros provienen de actividad humana terrestre — derrames, "
+    "agroquímicos y residuos industriales. El derrame de 2026 no es la excepción: "
+    "es la expresión más visible de un patrón sostenido."
+))
+
+cells.append(code([
+    "bio  = pd.DataFrame({'categoria': ['Arrecifes de Coral', 'Resto del Océano'], 'valor': [25, 75]})",
+    "ame  = pd.DataFrame({'categoria': ['Actividad Humana', 'Otras causas'], 'valor': [70, 30]})",
+]))
+
+cells.append(code([
+    "fig1 = px.pie(",
+    "    bio, values='valor', names='categoria',",
+    "    color='categoria',",
+    "    color_discrete_map={'Arrecifes de Coral': ODS_B, 'Resto del Océano': NEUTRAL},",
+    "    hole=0.55,",
+    ")",
+    "fig1.update_traces(",
+    "    textinfo='label+percent', textposition='outside', textfont=dict(size=12),",
+    ")",
+    "fig1.update_layout(",
+    "    **base_layout('0.1 El Tesoro — Biodiversidad en Arrecifes de Coral', height=420),",
+    "    showlegend=False,",
+    ")",
+    "fig1.add_annotation(",
+    "    text='<b>25%</b><br>de la biodiversidad<br>marina mundial',",
+    "    x=0.5, y=0.5, showarrow=False,",
+    "    font=dict(size=13, color=ODS_B),",
+    "    bgcolor='rgba(255,255,255,0.85)',",
+    ")",
+    "fig1.show()",
+]))
+
+cells.append(code([
+    "fig2 = px.pie(",
+    "    ame, values='valor', names='categoria',",
+    "    color='categoria',",
+    "    color_discrete_map={'Actividad Humana': ODS_G, 'Otras causas': NEUTRAL},",
+    "    hole=0.55,",
+    ")",
+    "fig2.update_traces(",
+    "    textinfo='label+percent', textposition='outside', textfont=dict(size=12),",
+    ")",
+    "fig2.update_layout(",
+    "    **base_layout('0.2 La Amenaza — Origen de las Presiones Costeras', height=420),",
+    "    showlegend=False,",
+    ")",
+    "fig2.add_annotation(",
+    "    text='<b>>70%</b><br>de las amenazas<br>son humanas',",
+    "    x=0.5, y=0.5, showarrow=False,",
+    "    font=dict(size=13, color=ODS_G),",
+    "    bgcolor='rgba(255,255,255,0.85)',",
+    ")",
+    "fig2.show()",
+]))
+
+cells.append(hallazgos(ODS_B, "HALLAZGOS — El valor de lo que se pierde", [
+    "Los arrecifes de coral cubren menos del **1% del fondo marino** pero sostienen el "
+    "**25% de toda la biodiversidad marina del planeta**. Son el ecosistema más denso "
+    "en especies del océano — y el más frágil ante los hidrocarburos.",
+    "El Sistema Arrecifal Mesoamericano genera más de **4,500 millones de dólares anuales** "
+    "en servicios ecosistémicos: pesca comercial, turismo, protección contra huracanes "
+    "y captura de carbono. Ese valor desaparece con cada derrame.",
+    "Más del **70% de las amenazas** a los ecosistemas costeros del Golfo tienen origen "
+    "humano terrestre. No son fenómenos naturales: son decisiones de política industrial "
+    "que se pueden cambiar.",
+    "El derrame de 2026 impacta directamente la zona de mayor concentración arrecifal "
+    "del Golfo. El daño no es solo pesquero: es estructural para toda la cadena "
+    "de servicios que el ecosistema provee.",
 ]))
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -247,45 +359,53 @@ cells.append(md(
 ))
 
 cells.append(code([
-    "ocupaciones = pd.DataFrame({",
-    "    'Ocupacion': [",
-    "        'Comerciantes en establecimientos',",
-    "        'Trabajadores domésticos',",
-    "        'Conductores de transporte',",
-    "        'Trabajadores agropecuarios',",
-    "        'Trabajadores en manufactura',",
-    "        'Trabajadores en construcción',",
-    "        'Trabajadores en servicios',",
-    "        'Trabajadores en Actividades Pesqueras',",
-    "        'Apoyo en Acuicultura y Pesca',",
-    "        'Buzos y perforadores de pozos',",
-    "    ],",
-    "    'Total': [4200000, 2100000, 1900000, 1700000, 1600000,",
-    "              1400000, 1300000, 320000, 180000, 45000],",
-    "})",
-    "expuestas = ['Trabajadores en Actividades Pesqueras',",
-    "             'Apoyo en Acuicultura y Pesca',",
-    "             'Buzos y perforadores de pozos']",
-    "oc = ocupaciones.sort_values('Total', ascending=True)",
-    "colores_oc = [ODS_B if o in expuestas else NEUTRAL for o in oc['Ocupacion']]",
+    "# Ocupaciones con sustento directo en el mar",
+    "expuestas_mar = [",
+    "    'Trabajadores en Actividades Pesqueras',",
+    "    'Trabajadores de Apoyo en Actividades de Acuicultura y Pesca',",
+    "    'Trabajadores en Actividades de Beneficio de Productos Pesqueros o Acuícolas',",
+    "    'Dinamiteros y Buzos en Perforación de Pozos y en la Construcción',",
+    "]",
+    "oc = ocup_pesca[ocup_pesca['Workforce'] >= 100].copy()",
+    "# Etiquetas cortas para el eje Y",
+    "abrev = {",
+    "    'Trabajadores en Actividades Pesqueras': 'Trabajadores en Actividades Pesqueras',",
+    "    'Trabajadores de Apoyo en Actividades de Acuicultura y Pesca': 'Apoyo en Acuicultura y Pesca',",
+    "    'Trabajadores en Actividades de Beneficio de Productos Pesqueros o Acuícolas': 'Beneficio de Productos Pesqueros',",
+    "    'Dinamiteros y Buzos en Perforación de Pozos y en la Construcción': 'Buzos y Dinamiteros',",
+    "    'Trabajadores en Actividades de Caza, Trampería y Similares': 'Caza y Trampería',",
+    "    'Oficiales y Marineros de Cubierta y Prácticos': 'Marineros de Cubierta',",
+    "    'Conductores de Pequeñas Embarcaciones (Lanchas, Botes, Trajineras, Etcétera)': 'Conductores de Embarcaciones',",
+    "    'Directores y Gerentes en Administración, Recursos Humanos y Mercadotecnia': 'Directores y Gerentes',",
+    "    'Trabajadores en la Elaboración de Productos de Carne, Pescado y sus Derivados': 'Elaboración Carne/Pescado',",
+    "    'Directores y Gerentes en Producción Agropecuaria, Silvícola y Pesquera': 'Gerentes en Producción Pesquera',",
+    "    'Preparadores y Vendedores Ambulantes de Alimentos': 'Vendedores Ambulantes',",
+    "    'Abogados': 'Abogados',",
+    "    'Conductores de Motocicleta': 'Conductores de Motocicleta',",
+    "    'Conductores de Autobuses, Camionetas, Taxis y Automóviles de Pasajeros': 'Conductores de Transporte',",
+    "    'Pilotos de Aviación': 'Pilotos de Aviación',",
+    "}",
+    "oc['label'] = oc['Occupation'].map(abrev).fillna(oc['Occupation'].str[:40])",
+    "oc = oc.sort_values('Workforce', ascending=True)",
+    "colores_oc = [ODS_B if o in expuestas_mar else NEUTRAL for o in oc['Occupation']]",
     "",
     "fig = go.Figure(go.Bar(",
-    "    x=oc['Total'], y=oc['Ocupacion'],",
+    "    x=oc['Workforce'], y=oc['label'],",
     "    orientation='h',",
     "    marker_color=colores_oc,",
-    "    text=oc['Total'].apply(lambda v: f'{v/1e6:.2f}M' if v >= 1e6 else f'{v:,}'),",
+    "    text=oc['Workforce'].apply(lambda v: f'{v:,}'),",
     "    textposition='outside',",
     "    textfont=dict(size=11),",
     "))",
     "fig.update_layout(",
-    "    **base_layout('2.1 Fuerza Laboral por Ocupación — Sectores expuestos al derrame', height=520),",
+    "    **base_layout('2.1 Fuerza Laboral por Ocupación en el Sector Pesquero (DataMéxico 2025-Q1)', height=560),",
     "    xaxis=dict(showgrid=False, showticklabels=False, zeroline=False,",
-    "               range=[0, oc['Total'].max()*1.25]),",
+    "               range=[0, oc['Workforce'].max()*1.3]),",
     "    yaxis=dict(showgrid=False, zeroline=False),",
     "    showlegend=False,",
     ")",
     "fig.add_annotation(",
-    "    text='<b style=\"color:#0A97D9\">Azul = sectores cuyo sustento depende directamente del mar</b>',",
+    "    text='<b style=\"color:#0A97D9\">Azul = sustento directo del mar — afectados por el derrame</b>',",
     "    xref='paper', yref='paper', x=0.99, y=0.02, showarrow=False, align='right',",
     "    font=dict(size=12), bgcolor='rgba(10,151,217,0.07)',",
     "    bordercolor=ODS_B, borderwidth=1, borderpad=8,",
@@ -294,35 +414,37 @@ cells.append(code([
 ]))
 
 cells.append(code([
-    "pesca_estados = pd.DataFrame({",
-    "    'Estado':       ['Veracruz', 'Sinaloa', 'Sonora', 'Campeche', 'Otros'],",
-    "    'Trabajadores': [89000, 72000, 65000, 41000, 53000],",
-    "})",
-    "total_pesca  = pesca_estados['Trabajadores'].sum()",
-    "pct_veracruz = pesca_estados.loc[0,'Trabajadores'] / total_pesca * 100",
+    "golfo_e = ['Veracruz', 'Tabasco', 'Campeche', 'Tamaulipas']",
+    "top_estados = pesca_edo.sort_values('Workforce', ascending=False).head(10).copy()",
+    "# Agregar 'Resto' para los demás estados",
+    "resto_wf = pesca_edo[~pesca_edo['estado'].isin(top_estados['estado'].tolist())]['Workforce'].sum()",
+    "resto_row = pd.DataFrame({'estado': ['Resto del País'], 'Workforce': [resto_wf]})",
+    "pesca_pie = pd.concat([top_estados[['estado','Workforce']], resto_row], ignore_index=True)",
+    "total_pesca_nac = pesca_pie['Workforce'].sum()",
+    "pct_golfo_pie = pesca_edo[pesca_edo['estado'].isin(golfo_e)]['Workforce'].sum() / total_pesca_nac * 100",
+    "",
+    "color_map = {e: ODS_G for e in golfo_e}",
+    "grays = ['#AAAAAA','#BBBBBB','#CCCCCC','#DDDDDD','#BEBEBE','#D0D0D0','#C8C8C8']",
+    "for i, e in enumerate([r for r in pesca_pie['estado'] if r not in golfo_e]):",
+    "    color_map[e] = grays[i % len(grays)]",
     "",
     "fig = px.pie(",
-    "    pesca_estados, values='Trabajadores', names='Estado',",
-    "    color='Estado',",
-    "    color_discrete_map={",
-    "        'Veracruz': ODS_G, 'Sinaloa': '#AAAAAA',",
-    "        'Sonora': '#BBBBBB', 'Campeche': '#CCCCCC', 'Otros': '#DDDDDD',",
-    "    },",
+    "    pesca_pie, values='Workforce', names='estado',",
+    "    color='estado', color_discrete_map=color_map,",
     "    hole=0.38,",
     ")",
     "fig.update_traces(",
     "    textposition='outside',",
     "    textinfo='label+percent',",
-    "    pull=[0.12 if e == 'Veracruz' else 0 for e in pesca_estados['Estado']],",
+    "    pull=[0.12 if e in golfo_e else 0 for e in pesca_pie['estado']],",
     "    textfont=dict(size=12),",
     ")",
     "fig.update_layout(",
-    "    **base_layout('2.2 Distribución de Trabajadores Pesqueros por Estado', height=490),",
-    "    legend=dict(orientation='h', yanchor='bottom', y=-0.12, xanchor='center', x=0.5),",
+    "    **base_layout('2.2 Trabajadores Pesqueros por Estado (DataMéxico 2025-Q1)', height=500),",
+    "    legend=dict(orientation='h', yanchor='bottom', y=-0.15, xanchor='center', x=0.5),",
     ")",
     "fig.add_annotation(",
-    "    text=f'<b>Zona de Impacto Directo</b><br>'",
-    "         f'Veracruz: {pct_veracruz:.1f}%<br>de la fuerza pesquera nacional',",
+    "    text=f'<b>Zona de Impacto Directo</b><br>Estados del Golfo:<br>{pct_golfo_pie:.1f}% de la fuerza pesquera',",
     "    x=0.5, y=0.5, showarrow=False,",
     "    font=dict(size=12, color=ODS_G),",
     "    bgcolor='rgba(255,255,255,0.9)',",
@@ -332,13 +454,15 @@ cells.append(code([
 ]))
 
 cells.append(hallazgos(ODS_G, "HALLAZGOS — Sección 2: Los que más pierden", [
-    "Más de <b>545,000 personas</b> trabajan directamente en pesca, acuicultura y perforación en el Golfo. "
-    "Son menos del 1% de la fuerza laboral nacional — pero absorben el 100% del impacto directo de cada derrame.",
-    "Veracruz concentra el <b>27.2% de toda la fuerza pesquera de México</b>. Cuando el mar se contamina en "
-    "Coatzacoalcos, no es un problema local: es el principal estado pesquero del país paralizado.",
-    "Campeche aparece como cuarto estado pesquero — y es simultáneamente uno de los estados con mayor "
-    "concentración de infraestructura petrolera. La misma economía que contamina también emplea. Esa es la trampa.",
-    "Los buzos y perforadores de pozos son el grupo más invisible: expuestos al riesgo industrial de adentro "
+    f"Más de <b>{_total_expuestos:,} personas</b> trabajan directamente en pesca, acuicultura y perforación "
+    f"en México (DataMéxico 2025-Q1). Son menos del 1% de la fuerza laboral nacional — pero absorben el 100% "
+    f"del impacto directo de cada derrame en el Golfo.",
+    f"Los cuatro estados del Golfo (Veracruz, Tabasco, Campeche, Tamaulipas) concentran el "
+    f"<b>{_pct_golfo_pesca}% de los pescadores de actividades pesqueras del país</b>. "
+    f"Son {_golfo_pesca_tot:,} trabajadores cuyo sustento depende de un mar limpio.",
+    "Campeche es simultáneamente cuarto estado pesquero <b>y</b> uno de los de mayor concentración "
+    "de infraestructura petrolera. La misma economía que contamina también emplea. Esa es la trampa.",
+    "Los buzos y dinamiteros son el grupo más invisible: expuestos al riesgo industrial de adentro "
     "<b>y</b> a la pérdida del ecosistema de afuera. Sus accidentes rara vez llegan a las estadísticas.",
 ]))
 
@@ -374,7 +498,7 @@ cells.append(code([
 ]))
 
 cells.append(code([
-    "colores_bar = [ODS_G if m == 'Coatzacoalcos' else NEUTRAL for m in resumen['Municipio']]",
+    "colores_bar = [ODS_G if m == 'Minatitlán' else NEUTRAL for m in resumen['Municipio']]",
     "",
     "fig = go.Figure(go.Bar(",
     "    x=resumen['Tasa'], y=resumen['Municipio'],",
@@ -411,7 +535,7 @@ cells.append(code([
     "    text=[f'{v:.1f}%' for v in mujeres], textposition='outside',",
     "))",
     "fig.update_layout(",
-    "    **base_layout('3.2 Desempleo por Género (%) — Brecha ODS 8'),",
+    "    **base_layout('3.2 Desempleo por Género (%) — Brecha ODS 8: Trabajo Decente y Crecimiento Económico'),",
     "    barmode='group',",
     "    legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),",
     "    yaxis=dict(title='Tasa de desempleo (%)', gridcolor='#EEEEEE'),",
@@ -472,17 +596,17 @@ cells.append(code([
 ]))
 
 cells.append(hallazgos(ODS_G, "HALLAZGOS — Sección 3: La herida humana", [
-    "<b>Coatzacoalcos es zona cero en todos los indicadores</b>: mayor tasa de desempleo general, "
-    "mayor concentración de reportes de chapopote, y la brecha de género más pronunciada. "
-    "No hay otra ciudad con ese perfil en el país.",
+    "<b>Minatitlán registra la mayor tasa de desempleo general</b> entre los municipios afectados. "
+    "Es un municipio petroquímico históricamente dependiente del crudo — cuando la industria falla, "
+    "la economía local no tiene alternativa. La tasa refleja décadas de dependencia sin diversificación.",
     "Las mujeres registran <b>tasas de desocupación más altas que los hombres en todos los "
     "municipios afectados</b>. En el sector pesquero, son quienes procesan y comercializan el "
     "producto — cuando la pesca colapsa, ellas pierden primero.",
     "El mapa revela lo que las estadísticas ocultan: una proporción significativa de los sitios "
     "con chapopote <b>no recibieron ninguna respuesta institucional</b> — solo la comunidad local. "
     "El Estado llegó tarde, o no llegó.",
-    "Pajapan, el municipio más pequeño del grupo, tiene una de las tasas de desempleo más altas. "
-    "Es un municipio costero de alta marginación: sin industria alternativa y en el corazón de la zona de impacto.",
+    "Pajapan, el municipio más pequeño del grupo, concentra alta vulnerabilidad: "
+    "comunidad costera de alta marginación, sin industria alternativa y en el corazón de la zona de impacto.",
 ]))
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -841,7 +965,7 @@ nb.metadata['kernelspec'] = {
 }
 nb.metadata['language_info'] = {'name': 'python', 'version': '3.13'}
 
-out = 'master_001.ipynb'
+out = 'storytelling.ipynb'
 with open(out, 'w', encoding='utf-8') as f:
     nbformat.write(nb, f)
 

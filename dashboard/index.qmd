@@ -22,7 +22,7 @@ historia del derrame, impacto socioeconómico, infraestructura de hidrocarburos,
 potencial renovable y llamados a la acción.
 
 ```{=html}
-<iframe src="assets/master_001_outputs.html" style="width:100%;height:1200px;border:0;">Tu navegador no soporta iframes.</iframe>
+<iframe src="assets/storytelling_outputs.html" style="width:100%;height:1200px;border:0;">Tu navegador no soporta iframes.</iframe>
 ```
 
 ### Impacto Socioeconómico del Derrame

@@ -13,6 +13,34 @@ Como equipo, decidimos utilizar la IA generativa estrictamente como un **acelera
 
 ---
 
+## Registro de uso (Sección Rodolfo - Claude Code)
+
+### 2026-04-13 | Claude Code | Configuración de Repositorio y GitHub Pages
+- **Tarea:** Configurar el repositorio de GitHub para despliegue automático con GitHub Actions y GitHub Pages, incluyendo el flujo de CI/CD con Quarto.
+- **Prompt:** "como hago para que el repositorio se vea en github pages y que se actualice solo cada que hacemos push"
+- **Resultado:** Script `build_site.sh`, archivo `.github/workflows/quarto-ci.yml` para CI automático y configuración de Pages sobre la carpeta `docs/`.
+- **Decisión y Modificaciones:** El equipo decidió usar `docs/` en lugar de una rama `gh-pages` separada para mantener todo el historial en `main` y simplificar las revisiones. La lógica de qué notebooks exportar (y con qué nombre) fue definida por el equipo.
+
+### 2026-04-13 | Claude Code | Homogenización Visual de Notebooks
+- **Tarea:** Unificar diseño visual entre `storytelling.ipynb`, `03_desempleo.ipynb` e `04_infraestructura.ipynb`: paleta ODS, librería Plotly, numeración de gráficas y hallazgos clave.
+- **Prompt:** "necesito que haya mayor homogenizacion entre las graficas de todos, tipos de letras, usa los colores de las ods (amarillo, guinda y azul), numeracion, que sean con plotly, la grafica de distribucion de trabajadores pesqueros por estado se traslapa redimensionar, y la de crecimiento solar y eolica en mexico creo que falta poner el label de que es lo verde"
+- **Resultado:** Paleta `ODS_Y=#FDB713`, `ODS_G=#A21942`, `ODS_B=#0A97D9`; función `base_layout()` compartida; conversión de todas las gráficas a Plotly; numeración `1.1, 1.2, 2.1...`; labels explícitos en gráfica solar/eólica; donut chart para distribución pesquera sin solapamiento.
+- **Decisión y Modificaciones:** La selección de los tres colores ODS y la decisión de qué elementos merecían hallazgos clave fueron del equipo. La IA propuso una paleta genérica inicialmente; el equipo la reemplazó con los colores oficiales de las ODS 7, 8 y 14.
+
+### 2026-04-13 | Claude Code | Diagnóstico y Corrección del Renderer de Plotly
+- **Tarea:** Resolver que las gráficas de Plotly no se veían en Jupyter Notebook después de migrar de Matplotlib.
+- **Prompt:** "no se ven las graficas... ok ahorita tengo todo en el repositorio, que tengo que hacer para que se vean las graficas con plotly"
+- **Resultado:** Identificación de que `notebook_connected` usa `<script type='module'>` (falla sobre `file://`); solución con `pio.renderers.default = 'notebook'` que embebe Plotly.js completo (~4.8 MB) como salida `text/html`, haciendo el notebook autocontenido.
+- **Decisión y Modificaciones:** El equipo aceptó el tamaño mayor del archivo (5 MB vs 40 KB) a cambio de visualización garantizada en cualquier entorno Jupyter sin conexión a internet. La exploración de renderers alternativos fue iterativa; el equipo validó cada opción antes de decidir.
+
+### 2026-04-14 | Claude Code | Integración de Datos Reales y Corrección de Interpretación
+- **Tarea:** Reemplazar datos hardcodeados en la gráfica 2.1 con datos reales de DataMéxico; corregir la interpretación errónea de la gráfica 3.1 (Minatitlán es el municipio con mayor desempleo, no Coatzacoalcos).
+- **Prompt:** "en la grafica 2.1 'fuerza laboral por ocupacion' se grafico mal usa los datos del csv 'Distribucion-poblacion-Trabajadores'. en la grafica 3.1 de tasa de empleo creo que la interpretacion esta mal minatitlan es la que tiene la mayor tasa de empleo, cambiar lo correspondiente y los hallazgos claves"
+- **Resultado:** Sección 2.1 rediseñada para leer `ocupaciones_pesca.csv` (DataMéxico 2025-Q1) con ocupaciones reales; sección 2.2 migrada a `trabajadores_pesqueros_estado.csv` con datos reales por estado; sección 3.1 corregida para resaltar Minatitlán; hallazgos actualizados con números reales.
+- **Decisión y Modificaciones:** La detección del error de interpretación (Minatitlán vs Coatzacoalcos) fue 100% del equipo. La IA ejecutó la corrección técnica, pero la validación de cuál municipio tiene la mayor tasa de desempleo provino del conocimiento del equipo sobre los datos ENOE.
+
+---
+
 ## Registro de uso (Sección Jessica - Gemini)
 
 ### 2026-04-12 | Gemini | Síntesis Visual de Fuentes Documentales (Sin CSV)

@@ -1,18 +1,19 @@
-# Impacto Derrame de Petróleo en la Costa de Veracruz y Tabasco 
+# Golfo de México: Del Derrame a la Transición
 
 ![Imagen del derrame](/image/derrame_petroleo.png)
 
 
-# Objetivo: 
-Las elegimos porque describen exactamente el problema y la solución al mismo 
-tiempo: trabajo digno, ecosistemas protegidos y energías limpias.
+# Objetivo
 
-Los tres fallan cuando dependes del petróleo, y lo estamos viendo ahora mismo 
-en el Golfo de México.
+Nuestro proyecto analiza cómo la dependencia petrolera de México expone a las
+comunidades costeras del Golfo a riesgos socioambientales, tomando como eje el
+derrame de marzo de 2026: más de 600 km de litoral afectados, siete áreas
+naturales protegidas dañadas y decenas de miles de pescadores sin sustento.
 
-Un derrame activo, miles de pescadores sin ingreso y siete áreas naturales 
-protegidas dañadas. No es un caso hipotético, es la noticia de hoy. Y estas 
-ODS son la hoja de ruta para no repetirlo.
+Los ODS 7, 8 y 14 fallan al mismo tiempo cuando el modelo energético depende
+del petróleo. Elegimos estas ODS porque describen tanto el problema como la
+dirección para no repetirlo: energía limpia, trabajo digno y ecosistemas
+protegidos. No es un caso hipotético — es la noticia de hoy.
 
 
 
@@ -28,21 +29,28 @@ ODS son la hoja de ruta para no repetirlo.
 
 
 
-| Nombre de las Fuente de información                         | Enlace                                                                                                                                                            |
-| ------------------------------------------------------------| ------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Encuesta Nacional de Ocupación y Empleo (ENOE)              | [INEGI ENOE](https://www.inegi.org.mx/programas/enoe/15ymas/)                                                                                                     |
-| Sitios afectados-Derrame de Petróleo Veracruz-Tabasco 2026  | [Sitios_afectados](https://www.google.com/maps/d/u/0/viewer?mid=1Ku4wk-WcKmPcrna08enfELqsr5pp9LA&ll=20.841486120822935%2C-97.37267330407846&z=7)                  |
-| Noticia del derrame de petróleo                             | [EL_PAIS](https://elpais.com/mexico/2025-10-28/la-huella-del-derrame-de-pemex-agudiza-la-emergencia-en-comunidades-de-veracruz.html)                              |
-|  Imagen de portada                                          |  [PROCESO](https://www.proceso.com.mx/nacional/estados/2026/3/4/derrame-de-petroleo-se-extiende-largo-de-casi-170-kilometros-del-litoral-veracruzano-369642.html) | 
-|   Objetivos de Desarrollo Sostenible                        |  [ODS](https://www.cepal.org/es/temas/agenda-2030-desarrollo-sostenible/objetivos-desarrollo-sostenible-ods)                                                      | 
+| Nombre de la Fuente de información                                        | Enlace / Referencia                                                                                                                                                            |
+| --------------------------------------------------------------------------| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Encuesta Nacional de Ocupación y Empleo (ENOE)                            | [INEGI ENOE](https://www.inegi.org.mx/programas/enoe/15ymas/)                                                                                                                  |
+| Sitios afectados — Derrame de Petróleo Veracruz-Tabasco 2026              | [Google Maps](https://www.google.com/maps/d/u/0/viewer?mid=1Ku4wk-WcKmPcrna08enfELqsr5pp9LA&ll=20.841486120822935%2C-97.37267330407846&z=7)                                    |
+| Noticia del derrame de petróleo                                           | [EL PAÍS](https://elpais.com/mexico/2025-10-28/la-huella-del-derrame-de-pemex-agudiza-la-emergencia-en-comunidades-de-veracruz.html)                                           |
+| Imagen de portada                                                         | [PROCESO](https://www.proceso.com.mx/nacional/estados/2026/3/4/derrame-de-petroleo-se-extiende-largo-de-casi-170-kilometros-del-litoral-veracruzano-369642.html)               |
+| Objetivos de Desarrollo Sostenible                                        | [CEPAL ODS](https://www.cepal.org/es/temas/agenda-2030-desarrollo-sostenible/objetivos-desarrollo-sostenible-ods)                                                              |
+| Balance Nacional de Energía — SENER SIE                                   | Secretaría de Energía, Sistema de Información Energética (SIE), datos 2015-2023                                                                                                |
+| Electricity Generation by Source — Our World in Data / Ember              | Ember, *Global Electricity Review*; reproducido en Our World in Data (electricity_sources.csv)                                                                                 |
+| Potencial Solar — Global Solar Atlas (GSA)                                | World Bank / Solargis, *Global Solar Atlas 2.0*, datos de irradiación horizontal global, 2024                                                                                  |
+| Potencial Eólico — Global Wind Atlas (GWA)                                | Technical University of Denmark (DTU), *Global Wind Atlas 3.3*, velocidad de viento a 100 m, 2024                                                                             |
+| Distribución de la Población Ocupada por Ocupación 2025-Q1               | DataMéxico / STPS-INEGI, *ENOE 2025 T1 — Distribución de trabajadores pesqueros por ocupación*                                                                                |
+| Trabajadores en Actividades Pesqueras por Estado 2025-Q1                  | DataMéxico / STPS-INEGI, *ENOE 2025 T1 — Población ocupada en actividades pesqueras por entidad*                                                                              |
+| Unidades Económicas del Sector Minero-Petrolero por Estado                | INEGI, *Directorio Estadístico Nacional de Unidades Económicas (DENUE)*, 2014                                                                                                  |
 
 
 
 ## Elaboración del Proyecto 
 
-- Jessica Alvarez Esquivel 
-- Santiago Gonzalez Chavez 
-- Rodolfo Renteria
+- Jessica Alvarez Esquivel
+- Santiago Gonzalez Chavez
+- Rodolfo Enrique Rentería Ramírez
 
 ## Información del repositorio (para la rúbrica HackODS)
 
