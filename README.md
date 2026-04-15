@@ -57,32 +57,17 @@ protegidos. No es un caso hipotético — es la noticia de hoy.
 - **Nombre del equipo:** Samsan_tech
 - **URL del repositorio:** https://github.com/SantiagoGlezCh7/Samsan_tech_HackODS2026
 - **ODS elegidos:** ODS 7, ODS 8, ODS 14
-- **Pregunta central:** ¿Cómo ha afectado el reciente derrame de petróleo en la costa de Veracruz-Tabasco al empleo y a las comunidades costeras, y qué zonas requieren atención prioritaria?
+- **Pregunta central:** ¿Qué tan expuestas están las comunidades costeras del Golfo de México por la dependencia petrolera del país, qué impacto real tiene un derrame en sus medios de vida, y qué papel podrían jugar las energías renovables como alternativa a mediano plazo para reducir ese riesgo?
 
 ## Estructura del proyecto
 
-- `datos/` : datasets usados (CSV, KML)
-- `scripts/` : scripts para procesar y construir el sitio
-- `dashboard/` : archivos `.qmd` del tablero (prototipo)
-- `docs/` : sitio generado (carpeta usada por GitHub Pages)
+- `datos/` : datasets usados (CSV)
+- `notebooks/` : análisis y visualizaciones (.ipynb)
 
 ## Entregable principal
 
 > **Nota:** El proceso de renderizado con Quarto no fue completado al cierre del hackathon. El entregable preliminar es el notebook `notebooks/storytelling.ipynb`, que contiene el análisis completo con todas las visualizaciones interactivas. Para visualizarlo, abrirlo directamente en Jupyter Notebook o JupyterLab.
 
-## Cómo ver el dashboard (despliegue)
-
-- Versión pública GitHub Pages: https://santiagoglezch7.github.io/Samsan_tech_HackODS2026/
-- El sitio se construye con Quarto. Localmente:
-
-```bash
-# construir sitio localmente (requiere Quarto)
-quarto render
-# o usar el script
-./scripts/build_site.sh
-```
-
-- En GitHub se ejecuta la acción `.github/workflows/quarto-ci.yml` que genera la carpeta `docs/` y la commitea a `main`. Asegúrate en la configuración del repositorio (Settings → Pages) que la fuente de Pages esté en `main` / `docs`.
 
 ## Declaración de uso de IA
 
@@ -107,9 +92,9 @@ El siguiente checklist mapea los ítems de la rúbrica al estado actual del repo
 | A3 | Metadatos de los datos (fuente, fecha, licencia, variables) | Parcial | `DATASETS.md` añadido (completa/ajustar fechas si es necesario) |
 | A4 | Estructura de carpetas (`datos/`, `scripts/`, `dashboard/`) | Sí | Carpetas existentes |
 | A5 | Declaratoria de uso de IA (plantilla oficial) | Parcial | `ai-log.md` presente; si se requiere plantilla oficial, la añado |
-| D0 | Existencia de `.qmd` o `.ipynb` | Sí | `dashboard/index.qmd` existe |
-| D1 | Visualizaciones | Sí | Visualizaciones en `dashboard` y `docs/` generadas |
-| D2 | Estructura del tablero | Sí | `dashboard/index.qmd` y `docs/` con layout de Quarto Dashboard |
+| D0 | Existencia de `.qmd` o `.ipynb` | Sí | `notebooks/storytelling.ipynb` presente |
+| D1 | Visualizaciones | Sí | Más de dos visualizaciones interactivas coherentes con la narrativa del proyecto |
+| D2 | Estructura del tablero | Sí | Notebook con narrativa estructurada en secciones (ecosistema, crisis laboral, desempleo, infraestructura, renovables, llamados a la acción) |
 
 Si quieres, puedo completar las fechas de descarga y las licencias exactas en `DATASETS.md`, y/o crear el archivo de Declaratoria de IA con la plantilla oficial.
 
