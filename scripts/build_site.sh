@@ -21,8 +21,8 @@ mkdir -p dashboard/assets
 
 # Exportar notebooks a HTML
 python -m nbconvert --to html --output-dir dashboard/assets --output storytelling_outputs notebooks/storytelling.ipynb
-python -m nbconvert --to html --output-dir dashboard/assets --output desempleo002_outputs notebooks/desempleo002.ipynb
-python -m nbconvert --to html --output-dir dashboard/assets --output infraestructura_001_outputs notebooks/04_infraestructura.ipynb
+python -m nbconvert --to html --output-dir dashboard/assets --output desempleo_outputs notebooks/01_desempleo.ipynb
+python -m nbconvert --to html --output-dir dashboard/assets --output infraestructura_outputs notebooks/02_infraestructura.ipynb
 
 # Renderizar sitio Quarto en la carpeta docs usando output-dir
 quarto render dashboard --output-dir docs

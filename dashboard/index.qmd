@@ -31,7 +31,7 @@ Se muestran las salidas del notebook `notebooks/desempleo002.ipynb`:
 desempleo por municipio, brecha de género y mapa interactivo de zonas afectadas.
 
 ```{=html}
-<iframe src="assets/desempleo002_outputs.html" style="width:100%;height:900px;border:0;">Tu navegador no soporta iframes.</iframe>
+<iframe src="assets/desempleo_outputs.html" style="width:100%;height:900px;border:0;">Tu navegador no soporta iframes.</iframe>
 ```
 
 ### Infraestructura y Dependencia de Hidrocarburos
@@ -41,7 +41,7 @@ concentración de establecimientos en el Golfo, participación histórica en la
 matriz energética nacional y potencial de energías renovables como alternativa de mediano plazo.
 
 ```{=html}
-<iframe src="assets/infraestructura_001_outputs.html" style="width:100%;height:1100px;border:0;">Tu navegador no soporta iframes.</iframe>
+<iframe src="assets/infraestructura_outputs.html" style="width:100%;height:1100px;border:0;">Tu navegador no soporta iframes.</iframe>
 ```
 
 :::

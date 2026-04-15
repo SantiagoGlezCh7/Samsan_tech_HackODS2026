@@ -373,7 +373,7 @@ nb.cells = cells
 nb.metadata["kernelspec"] = {"display_name": "Python 3", "language": "python", "name": "python3"}
 nb.metadata["language_info"] = {"name": "python", "version": "3.13"}
 
-out = "infraestructura_001.ipynb"
+out = "02_infraestructura.ipynb"
 with open(out, "w", encoding="utf-8") as f:
     nbformat.write(nb, f)
 
