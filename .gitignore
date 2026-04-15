@@ -7,3 +7,10 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Sistema
+.DS_Store
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
