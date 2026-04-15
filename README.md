@@ -66,6 +66,10 @@ protegidos. No es un caso hipotético — es la noticia de hoy.
 - `dashboard/` : archivos `.qmd` del tablero (prototipo)
 - `docs/` : sitio generado (carpeta usada por GitHub Pages)
 
+## Entregable principal
+
+> **Nota:** El proceso de renderizado con Quarto no fue completado al cierre del hackathon. El entregable preliminar es el notebook `notebooks/storytelling.ipynb`, que contiene el análisis completo con todas las visualizaciones interactivas. Para visualizarlo, abrirlo directamente en Jupyter Notebook o JupyterLab.
+
 ## Cómo ver el dashboard (despliegue)
 
 - Versión pública GitHub Pages: https://santiagoglezch7.github.io/Samsan_tech_HackODS2026/

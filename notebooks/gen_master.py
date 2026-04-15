@@ -83,9 +83,12 @@ cells = []
 # ═══════════════════════════════════════════════════════════════════════════════
 cells.append(md(
     '<div style="text-align:center;padding:28px 0 12px">\n'
-    '<h1 style="font-size:2.1em;color:#222;margin:0 0 8px">'
-    'Golfo de México: Del Derrame a la Transición</h1>\n'
-    '<p style="color:#777;margin:4px 0;font-size:1.05em">HackODS 2026 · SamsanTech</p>\n'
+    '<h1 style="font-size:2.1em;color:#222;margin:0 0 10px">'
+    'El Golfo de México que vive del petróleo y muere por él</h1>\n'
+    '<p style="color:#444;margin:4px 0 14px;font-size:1.05em;max-width:680px;margin-left:auto;margin-right:auto">'
+    'Los datos que explican por qué el Golfo de México concentra tanto la riqueza '
+    'petrolera nacional como su riesgo socioambiental.</p>\n'
+    '<p style="color:#777;margin:4px 0;font-size:1.0em">HackODS 2026 · SamsanTech</p>\n'
     '<p style="margin:6px 0"><b>Equipo:</b> '
     'Jessica Álvarez · Santiago González · Rodolfo Rentería</p>\n'
     '<div style="display:flex;gap:28px;justify-content:center;margin:22px 0;flex-wrap:wrap">\n'
